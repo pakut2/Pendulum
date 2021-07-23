@@ -1,0 +1,17 @@
+{
+  "name": "pendulum",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "db": "cd server && docker-compose up",
+    "server": "cd server && nest start --watch",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}
