@@ -15,8 +15,12 @@ const RegisterScreen = ({ location, history }: any) => {
   const [message, setMessage] = useState(null);
 
   const dispatch = useDispatch();
+
+  const userLogin = useSelector((state: any) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const userRegister = useSelector((state: any) => state.userRegister);
-  const { loading, error, userInfo } = userRegister;
+  const { loading, error } = userRegister;
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
@@ -34,14 +38,15 @@ const RegisterScreen = ({ location, history }: any) => {
       setMessage("Passwords do not match");
     } else {
       dispatch(register(name, email, password));
+      history.push(redirect);
     }
   };
 
   return (
     <FormContainer>
       <h1>Sign Up</h1>
-      {message && <Message variant="danger">{message}</Message>}
-      {error && <Message variant="danger">{error}</Message>}
+      {message && <Message>{message}</Message>}
+      {error && <Message>{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group className="py-1" controlId="name">

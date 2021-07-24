@@ -31,7 +31,7 @@ const LoginScreen = ({ location, history }: any) => {
   return (
     <FormContainer>
       <h1>Sign In</h1>
-      {error && <Message variant="danger">{error}</Message>}
+      {error && <Message>{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group className="py-1" controlId="email">

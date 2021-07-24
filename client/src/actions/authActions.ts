@@ -1,19 +1,19 @@
 import axios from "axios";
 import {
-  USER_LOGIN_FAIL,
-  USER_LOGIN_REQUEST,
-  USER_LOGIN_SUCCESS,
-  USER_LOGOUT,
-  USER_LOGOUT_FAIL,
-  USER_REGISTER_FAIL,
-  USER_REGISTER_REQUEST,
-  USER_REGISTER_SUCCESS,
+  AUTH_LOGIN_FAIL,
+  AUTH_LOGIN_REQUEST,
+  AUTH_LOGIN_SUCCESS,
+  AUTH_LOGOUT,
+  AUTH_LOGOUT_FAIL,
+  AUTH_REGISTER_FAIL,
+  AUTH_REGISTER_REQUEST,
+  AUTH_REGISTER_SUCCESS,
 } from "../constants/authConstants";
 
 export const login =
   (email: string, password: string) => async (dispatch: any) => {
     try {
-      dispatch({ type: USER_LOGIN_REQUEST });
+      dispatch({ type: AUTH_LOGIN_REQUEST });
 
       const config = {
         headers: {
@@ -28,14 +28,14 @@ export const login =
       );
 
       dispatch({
-        type: USER_LOGIN_SUCCESS,
+        type: AUTH_LOGIN_SUCCESS,
         payload: data,
       });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (err) {
       dispatch({
-        type: USER_LOGIN_FAIL,
+        type: AUTH_LOGIN_FAIL,
         payload:
           err.response && err.response.data.message
             ? err.response.data.message
@@ -48,14 +48,14 @@ export const logout = () => async (dispatch: any) => {
   localStorage.removeItem("userInfo");
 
   dispatch({
-    type: USER_LOGOUT,
+    type: AUTH_LOGOUT,
   });
 
   try {
     await axios.post("/api/auth/logout");
   } catch (err) {
     dispatch({
-      type: USER_LOGOUT_FAIL,
+      type: AUTH_LOGOUT_FAIL,
       payload:
         err.response && err.response.data.message
           ? err.response.data.message
@@ -68,7 +68,7 @@ export const register =
   (name: string, email: string, password: string) => async (dispatch: any) => {
     try {
       dispatch({
-        type: USER_REGISTER_REQUEST,
+        type: AUTH_REGISTER_REQUEST,
       });
 
       const config = {
@@ -84,12 +84,12 @@ export const register =
       );
 
       dispatch({
-        type: USER_REGISTER_SUCCESS,
+        type: AUTH_REGISTER_SUCCESS,
         payload: data,
       });
     } catch (err) {
       dispatch({
-        type: USER_REGISTER_FAIL,
+        type: AUTH_REGISTER_FAIL,
         payload:
           err.response && err.response.data.message
             ? err.response.data.message
