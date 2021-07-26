@@ -9,6 +9,7 @@ import {
   AUTH_REGISTER_REQUEST,
   AUTH_REGISTER_SUCCESS,
 } from "../constants/authConstants";
+import { USER_UPDATE_RESET } from "../constants/userConstants";
 
 export const login =
   (email: string, password: string) => async (dispatch: any) => {
@@ -50,6 +51,8 @@ export const logout = () => async (dispatch: any) => {
   dispatch({
     type: AUTH_LOGOUT,
   });
+
+  dispatch({ type: USER_UPDATE_RESET });
 
   try {
     await axios.post("/api/auth/logout");

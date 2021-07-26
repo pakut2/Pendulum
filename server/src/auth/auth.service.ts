@@ -61,10 +61,10 @@ export class AuthService {
     }
   }
 
-  public getCookieWithJwtToken(userId: number) {
+  public getCookieWithJwtToken(userId: string) {
     const payload = { userId };
     const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=30d`;
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=3600000`;
   }
 
   public getCookieForLogOut() {

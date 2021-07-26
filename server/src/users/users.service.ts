@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import User from "./entities/user.entity";
 import CreateUserDto from "./dto/createUser.dto";
 import * as bcrypt from "bcrypt";
+import PostgresErrorCode from "../database/postgresErrorCodes.enum";
 
 @Injectable()
 export class UsersService {
@@ -12,7 +13,7 @@ export class UsersService {
     private usersRepository: Repository<User>
   ) {}
 
-  async getById(id: number) {
+  async getById(id: string) {
     const user = await this.usersRepository.findOne({ id });
     if (user) {
       return user;
@@ -34,19 +35,16 @@ export class UsersService {
     return newUser;
   }
 
-  // async update(id: number, userData: CreateUserDto) {
-  //   if (userData.password) {
-  //     userData.password = await bcrypt.hash(userData.password, 10);
-  //   }
-  //   const updatedUser = await this.usersRepository.update(id, userData);
-  //   return updatedUser;
-  // }
-
-  async delete(id: number) {
+  async update(id: string, userData: CreateUserDto) {
     try {
-      await this.usersRepository.delete(id);
+      if (userData.password) {
+        userData.password = await bcrypt.hash(userData.password, 10);
+      }
+      await this.usersRepository.update(id, userData);
     } catch (err) {
-      throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
+      if (err?.code === PostgresErrorCode.UniqueViolation) {
+        throw new HttpException("User already exists", HttpStatus.BAD_REQUEST);
+      }
     }
   }
 }

@@ -20,15 +20,13 @@ const RegisterScreen = ({ location, history }: any) => {
   const { userInfo } = userLogin;
 
   const userRegister = useSelector((state: any) => state.userRegister);
-  const { loading, error } = userRegister;
-
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const { loading, error, userInfo: user } = userRegister;
 
   useEffect(() => {
-    if (userInfo) {
-      history.push(redirect);
+    if (userInfo || user) {
+      history.push("/dashboard");
     }
-  }, [history, userInfo, redirect]);
+  }, [history, userInfo, user]);
 
   const submitHandler = (e: any) => {
     e.preventDefault();
@@ -38,7 +36,6 @@ const RegisterScreen = ({ location, history }: any) => {
       setMessage("Passwords do not match");
     } else {
       dispatch(register(name, email, password));
-      history.push(redirect);
     }
   };
 
@@ -103,10 +100,7 @@ const RegisterScreen = ({ location, history }: any) => {
       </Form>
       <Row className="py-3">
         <Col>
-          Have an Account?{" "}
-          <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
-            Login
-          </Link>
+          Have an Account? <Link to="/login">Login</Link>
         </Col>
       </Row>
     </FormContainer>

@@ -16,3 +16,24 @@ h2 {
 h3 {
   padding: 1rem 0;
 }
+
+.background-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background-image: url("./assets/bus.jpg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+}
+
+.shadow {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.align {
+  position: relative;
+  top: 25vh;
+}
