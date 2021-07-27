@@ -11,7 +11,7 @@ const LandingScreen = ({ history }: any) => {
     if (userInfo) {
       history.push("/dashboard");
     }
-  }, [userInfo]);
+  }, [userInfo, history]);
 
   return (
     <Fragment>
