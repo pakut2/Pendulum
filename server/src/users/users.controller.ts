@@ -5,8 +5,10 @@ import {
   Delete,
   Get,
   Param,
+  Post,
   Put,
   Req,
+  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -17,6 +19,8 @@ import RequestWithUser from "../auth/interfaces/requestWithUser";
 import UpdateDto from "./dto/update.dto";
 import { Role } from "./entities/role.enum";
 import { UsersService } from "./users.service";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Express } from "express";
 
 @Controller("users")
 @UseInterceptors(ClassSerializerInterceptor)
@@ -33,6 +37,20 @@ export class UsersController {
   @Get(":id")
   async getUserById(@Param("id") id: string) {
     return this.usersService.getById(id);
+  }
+
+  @Post("avatar")
+  @UseGuards(JwtAuthenticationGuard)
+  @UseInterceptors(FileInterceptor("file"))
+  async addAvatar(
+    @Req() request: RequestWithUser,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    return this.usersService.addAvatar(
+      request.user.id,
+      file.buffer,
+      file.originalname
+    );
   }
 
   @UseGuards(JwtAuthenticationGuard)

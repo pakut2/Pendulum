@@ -3,6 +3,8 @@ import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as cookieParser from "cookie-parser";
 import { ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { config } from "aws-sdk";
 declare const module: any;
 
 async function bootstrap() {
@@ -11,13 +13,20 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
 
-  const config = new DocumentBuilder()
+  const configService = app.get(ConfigService);
+  config.update({
+    accessKeyId: configService.get("AWS_ACCESS_KEY_ID"),
+    secretAccessKey: configService.get("AWS_SECRET_ACCESS_KEY"),
+    region: configService.get("AWS_REGION"),
+  });
+
+  const docs = new DocumentBuilder()
     .setTitle("Pendulum")
     .setDescription("API docs")
     .setVersion("1.0")
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, docs);
 
   SwaggerModule.setup("api/docs", app, document, {
     explorer: true,

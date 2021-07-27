@@ -38,7 +38,7 @@ const Header = () => {
                   </NavDropdown>
                   <Navbar.Brand>
                     <Image
-                      src={userInfo.image}
+                      src={userInfo.avatar.url}
                       alt=""
                       width="30"
                       height="30"

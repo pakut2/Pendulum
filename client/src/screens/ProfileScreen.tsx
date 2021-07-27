@@ -53,7 +53,7 @@ const ProfileScreen = ({ history }: any) => {
       } else {
         setName(user.name);
         setEmail(user.email);
-        setImage(user.image);
+        setImage(user.avatar.url);
       }
     }
   }, [userInfo, history, user, dispatch, success]);
