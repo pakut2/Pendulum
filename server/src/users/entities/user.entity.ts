@@ -6,6 +6,9 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
+import { Exclude } from "class-transformer";
+import { Role } from "./role.enum";
+
 import * as gravatar from "gravatar";
 
 @Entity()
@@ -20,6 +23,7 @@ class User {
   public name: string;
 
   @Column()
+  @Exclude()
   public password: string;
 
   @Column({
@@ -37,8 +41,8 @@ class User {
     });
   }
 
-  @Column({ default: false })
-  public isAdmin?: boolean;
+  @Column({ default: Role.User })
+  public role?: Role;
 
   @CreateDateColumn({
     type: "timestamp",

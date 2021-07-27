@@ -47,4 +47,20 @@ export class UsersService {
       }
     }
   }
+
+  async findAll() {
+    return this.usersRepository.find();
+  }
+
+  async delete(id: string) {
+    try {
+      const user = await this.usersRepository.findOne({ id });
+
+      if (user) {
+        return this.usersRepository.delete(id);
+      }
+    } catch (err) {
+      throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
+    }
+  }
 }

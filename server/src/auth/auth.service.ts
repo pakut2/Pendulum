@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import {
+  ClassSerializerInterceptor,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UseInterceptors,
+} from "@nestjs/common";
 import { UsersService } from "../users/users.service";
 import RegisterDto from "./dto/register.dto";
 import * as bcrypt from "bcrypt";
@@ -6,6 +12,7 @@ import { JwtService } from "@nestjs/jwt";
 import PostgresErrorCode from "../database/postgresErrorCodes.enum";
 
 @Injectable()
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
@@ -21,7 +28,6 @@ export class AuthService {
         password: hashedPassword,
       });
 
-      createdUser.password = undefined;
       return createdUser;
     } catch (err) {
       if (err?.code === PostgresErrorCode.UniqueViolation) {
@@ -39,8 +45,6 @@ export class AuthService {
     try {
       const user = await this.usersService.getByEmail(email);
       await this.verifyPassword(plainTextPassword, user.password);
-
-      user.password = undefined;
       return user;
     } catch (err) {
       throw new HttpException("Invalid Credentials", HttpStatus.BAD_REQUEST);

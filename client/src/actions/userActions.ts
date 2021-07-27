@@ -13,7 +13,7 @@ export const getAuthenticatedUser = () => async (dispatch: any) => {
   try {
     dispatch({ type: USER_GET_AUTH_REQUEST });
 
-    const { data } = await axios.get("/api/users");
+    const { data } = await axios.get("/api/users/user");
 
     dispatch({ type: USER_GET_AUTH_SUCCESS, payload: data });
   } catch (err) {
