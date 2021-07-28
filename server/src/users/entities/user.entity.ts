@@ -25,21 +25,6 @@ class User {
   @Exclude()
   public password: string;
 
-  // @Column({
-  //   default:
-  //     "http://www.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=200&r=pg&d=mm",
-  // })
-  // public image?: string;
-
-  // @BeforeInsert()
-  // private avatar() {
-  //   this.image = gravatar.url(this.email, {
-  //     s: "200",
-  //     r: "pg",
-  //     d: "mm",
-  //   });
-  // }
-
   @JoinColumn()
   @OneToOne(() => PublicFile, {
     eager: true,

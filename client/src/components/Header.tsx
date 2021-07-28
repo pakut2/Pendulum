@@ -38,7 +38,11 @@ const Header = () => {
                   </NavDropdown>
                   <Navbar.Brand>
                     <Image
-                      src={userInfo.avatar.url}
+                      src={
+                        userInfo.avatar
+                          ? userInfo.avatar.url
+                          : "http://www.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=200&r=pg&d=mm"
+                      }
                       alt=""
                       width="30"
                       height="30"

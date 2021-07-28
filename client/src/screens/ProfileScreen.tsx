@@ -14,6 +14,7 @@ import Message from "../components/Message";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuthenticatedUser, updateUser } from "../actions/userActions";
 import { USER_UPDATE_RESET } from "../constants/userConstants";
+import axios from "axios";
 
 const ProfileScreen = ({ history }: any) => {
   const [name, setName] = useState("");
@@ -23,6 +24,7 @@ const ProfileScreen = ({ history }: any) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [displayInputs, toggleInputs] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -53,7 +55,13 @@ const ProfileScreen = ({ history }: any) => {
       } else {
         setName(user.name);
         setEmail(user.email);
-        setImage(user.avatar.url);
+        if (user.avatar) {
+          setImage(user.avatar.url);
+        } else {
+          setImage(
+            "http://www.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=200&r=pg&d=mm"
+          );
+        }
       }
     }
   }, [userInfo, history, user, dispatch, success]);
@@ -70,6 +78,33 @@ const ProfileScreen = ({ history }: any) => {
       } else {
         dispatch(updateUser(userInfo.id, { name, email, password }));
       }
+    }
+  };
+
+  const uploadHandler = async (e: any) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.post(
+        "http://localhost:5000/api/users/upload",
+        formData,
+        config
+      );
+      console.log(data);
+      setImage(data);
+      setUploading(false);
+    } catch (err) {
+      console.error(err);
+      setUploading(false);
     }
   };
 
@@ -143,6 +178,22 @@ const ProfileScreen = ({ history }: any) => {
                   }}
                 ></Form.Control>
               </Form.Group>
+              <Form.Group className="py-1" controlId="image">
+                <Form.Label>Image</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Image URL"
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
+                ></Form.Control>
+                <Form.File
+                  id="image-file"
+                  custom
+                  onChange={uploadHandler}
+                ></Form.File>
+                {uploading && <Loader />}
+              </Form.Group>
+
               <Form.Group className="py-1" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control

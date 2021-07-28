@@ -20,7 +20,7 @@ export class FilesService {
       .upload({
         Bucket: this.configService.get("AWS_PUBLIC_BUCKET_NAME"),
         Body: dataBuffer,
-        Key: `${uuid()}-${filename}`,
+        Key: `avatars/${uuid()}-${filename}`,
       })
       .promise();
 
@@ -33,7 +33,7 @@ export class FilesService {
     return newFile;
   }
 
-  async deletePublicFile(fileId: number) {
+  async deletePublicFile(fileId: string) {
     const file = await this.publicFilesRepository.findOne({ id: fileId });
     const s3 = new S3();
     await s3
