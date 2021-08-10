@@ -56,7 +56,7 @@ export class UsersController {
   @UseGuards(JwtAuthenticationGuard)
   @Put(":id")
   async updateUser(@Param("id") id: string, @Body() userData: UpdateDto) {
-    this.usersService.update(id, userData);
+    await this.usersService.update(id, userData);
     return this.usersService.getById(id);
   }
 
@@ -73,5 +73,12 @@ export class UsersController {
   async deleteUser(@Param("id") id: string) {
     await this.usersService.deleteAvatar(id);
     return this.usersService.delete(id);
+  }
+
+  @UseGuards(JwtAuthenticationGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @Put("admin/:id")
+  async adminUserUpdate(@Param("id") id: string, @Body() userData: UpdateDto) {
+    await this.usersService.adminUpdate(id, userData);
   }
 }

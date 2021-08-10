@@ -1,7 +1,15 @@
 import {
+  USER_ADMIN_UPDATE_FAIL,
+  USER_ADMIN_UPDATE_REQUEST,
+  USER_ADMIN_UPDATE_RESET,
+  USER_ADMIN_UPDATE_SUCCESS,
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_RESET,
+  USER_DETAILS_SUCCESS,
   USER_GET_AUTH_FAIL,
   USER_GET_AUTH_REQUEST,
   USER_GET_AUTH_RESET,
@@ -77,6 +85,40 @@ export const userDeleteReducer = (state = {}, action: any) => {
       return { loading: false, success: true };
     case USER_DELETE_FAIL:
       return { loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const userGetDetailsReducer = (state = { user: {} }, action: any) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case USER_DETAILS_REQUEST:
+      return { loading: true };
+    case USER_DETAILS_SUCCESS:
+      return { loading: false, success: true, user: payload };
+    case USER_DETAILS_FAIL:
+      return { loading: false, error: payload };
+    case USER_DETAILS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userAdminUpdateReducer = (state = {}, action: any) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case USER_ADMIN_UPDATE_REQUEST:
+      return { loading: true };
+    case USER_ADMIN_UPDATE_SUCCESS:
+      return { loading: false, success: true };
+    case USER_ADMIN_UPDATE_FAIL:
+      return { loading: false, error: payload };
+    case USER_ADMIN_UPDATE_RESET:
+      return {};
     default:
       return state;
   }

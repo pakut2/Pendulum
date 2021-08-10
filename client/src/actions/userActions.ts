@@ -1,9 +1,15 @@
 import axios from "axios";
 import { AUTH_LOGIN_SUCCESS, AUTH_LOGOUT } from "../constants/authConstants";
 import {
+  USER_ADMIN_UPDATE_FAIL,
+  USER_ADMIN_UPDATE_REQUEST,
+  USER_ADMIN_UPDATE_SUCCESS,
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
   USER_DELETE_SUCCESS,
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
   USER_GET_AUTH_FAIL,
   USER_GET_AUTH_REQUEST,
   USER_GET_AUTH_SUCCESS,
@@ -111,3 +117,51 @@ export const deleteUser = (id: string) => async (dispatch: any) => {
     });
   }
 };
+
+export const getUserDetails = (id: string) => async (dispatch: any) => {
+  try {
+    dispatch({ type: USER_DETAILS_REQUEST });
+
+    const { data } = await axios.get(`/api/users/${id}`);
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (err) {
+    dispatch({
+      type: USER_DETAILS_FAIL,
+      payload:
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message,
+    });
+  }
+};
+
+export const adminUpdateUser =
+  (id: string, user: Object) => async (dispatch: any) => {
+    try {
+      dispatch({ type: USER_ADMIN_UPDATE_REQUEST });
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      await axios.put(`/api/users/admin/${id}`, user, config);
+
+      dispatch({
+        type: USER_ADMIN_UPDATE_SUCCESS,
+      });
+    } catch (err) {
+      dispatch({
+        type: USER_ADMIN_UPDATE_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
+  };

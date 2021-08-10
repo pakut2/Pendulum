@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -14,7 +15,6 @@ import Message from "../components/Message";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuthenticatedUser, updateUser } from "../actions/userActions";
 import { USER_UPDATE_RESET } from "../constants/userConstants";
-import axios from "axios";
 
 const ProfileScreen = ({ history }: any) => {
   const [name, setName] = useState("");
@@ -99,7 +99,7 @@ const ProfileScreen = ({ history }: any) => {
         formData,
         config
       );
-      console.log(data);
+
       setImage(data);
       setUploading(false);
     } catch (err) {
@@ -118,7 +118,7 @@ const ProfileScreen = ({ history }: any) => {
             <Link className="btn btn-outline-light my-3" to="/dashboard">
               Dashboard
             </Link>
-            <Card border="primary">
+            <Card border="secondary">
               <Card.Header className="text-center">
                 <Image
                   src={image}
@@ -178,22 +178,6 @@ const ProfileScreen = ({ history }: any) => {
                   }}
                 ></Form.Control>
               </Form.Group>
-              <Form.Group className="py-1" controlId="image">
-                <Form.Label>Image</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Image URL"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                ></Form.Control>
-                <Form.File
-                  id="image-file"
-                  custom
-                  onChange={uploadHandler}
-                ></Form.File>
-                {uploading && <Loader />}
-              </Form.Group>
-
               <Form.Group className="py-1" controlId="password">
                 <Form.Label>Password</Form.Label>
                 <Form.Control
@@ -215,6 +199,15 @@ const ProfileScreen = ({ history }: any) => {
                     setConfirmPassword(e.target.value);
                   }}
                 ></Form.Control>
+              </Form.Group>
+              <Form.Group className="py-1" controlId="image">
+                <Form.Label>Avatar</Form.Label>
+                <Form.File
+                  id="image-file"
+                  custom
+                  onChange={uploadHandler}
+                ></Form.File>
+                {uploading && <Loader />}
               </Form.Group>
               <Button type="submit" variant="primary" className="my-1">
                 Update

@@ -9,6 +9,8 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import UserListScreen from "./screens/UserListScreen";
+import CreatePostScreen from "./screens/CreatePostScreen";
+import UserEditScreen from "./screens/UserEditScreen";
 
 const App = () => {
   return (
@@ -21,7 +23,13 @@ const App = () => {
             <Route path="/register" component={RegisterScreen} />
             <Route path="/profile" component={ProfileScreen} />
             <Route path="/dashboard" component={DashboardScreen} />
+            <Route path="/post" component={CreatePostScreen} />
             <Route path="/admin/userlist" component={UserListScreen} />
+            <Route
+              exact
+              path="/admin/user/:id/edit"
+              component={UserEditScreen}
+            />
             <Route exact path="/" component={LandingScreen} />
           </Container>
         </main>

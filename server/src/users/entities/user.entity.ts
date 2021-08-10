@@ -3,12 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import PublicFile from "../../files/entities/publicFile.entity";
 import { Exclude } from "class-transformer";
 import { Role } from "./role.enum";
+import Post from "../../posts/entities/post.entity";
 
 @Entity()
 class User {
@@ -34,6 +36,9 @@ class User {
 
   @Column({ default: Role.User })
   public role?: Role;
+
+  @OneToMany(() => Post, (post: Post) => post.author)
+  public posts: Post[];
 
   @CreateDateColumn({
     type: "timestamp",

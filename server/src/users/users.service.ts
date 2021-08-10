@@ -6,6 +6,7 @@ import CreateUserDto from "./dto/createUser.dto";
 import * as bcrypt from "bcrypt";
 import PostgresErrorCode from "../database/postgresErrorCodes.enum";
 import { FilesService } from "../files/files.service";
+import UpdateDto from "./dto/update.dto";
 
 @Injectable()
 export class UsersService {
@@ -69,7 +70,7 @@ export class UsersService {
     return newUser;
   }
 
-  async update(id: string, userData: CreateUserDto) {
+  async update(id: string, userData: UpdateDto) {
     try {
       if (userData.password) {
         userData.password = await bcrypt.hash(userData.password, 10);
@@ -95,6 +96,16 @@ export class UsersService {
       }
     } catch (err) {
       throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async adminUpdate(id: string, userData: UpdateDto) {
+    try {
+      await this.usersRepository.update(id, userData);
+    } catch (err) {
+      if (err?.code === PostgresErrorCode.UniqueViolation) {
+        throw new HttpException("User already exists", HttpStatus.BAD_REQUEST);
+      }
     }
   }
 }

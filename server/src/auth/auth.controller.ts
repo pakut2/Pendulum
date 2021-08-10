@@ -13,7 +13,6 @@ import { AuthService } from "./auth.service";
 import RegisterDto from "./dto/register.dto";
 import { LocalAuthenticationGuard } from "./guards/local.guard";
 import RequestWithUser from "./interfaces/requestWithUser";
-import { Response } from "express";
 import JwtAuthenticationGuard from "./guards/jwt.guard";
 
 @Controller("auth")

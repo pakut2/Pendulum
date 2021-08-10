@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { listUsers, deleteUser } from "../actions/userActions";
+import { USER_DETAILS_RESET } from "../constants/userConstants";
 
 const UserListScreen = ({ history }: any) => {
   const dispatch = useDispatch();
@@ -18,13 +19,20 @@ const UserListScreen = ({ history }: any) => {
   const userDelete = useSelector((state: any) => state.userDelete);
   const { success: successDelete } = userDelete;
 
+  const userGetDetails = useSelector((state: any) => state.userGetDetails);
+  const { user } = userGetDetails;
+
   useEffect(() => {
     if (userInfo && userInfo.role === "admin") {
       dispatch(listUsers());
     } else {
       history.push("/login");
     }
-  }, [dispatch, history, userInfo, successDelete]);
+
+    if (user) {
+      dispatch({ type: USER_DETAILS_RESET });
+    }
+  }, [dispatch, history, userInfo, successDelete, user]);
 
   const deleteHandler = (id: string) => {
     if (window.confirm("Are you sure?")) {

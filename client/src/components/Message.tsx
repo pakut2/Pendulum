@@ -3,7 +3,7 @@ import { Alert } from "react-bootstrap";
 
 interface PropTypes {
   variant: string;
-  children: string | null;
+  children: string | null | any;
 }
 
 const Message = ({ variant, children }: PropTypes) => {
