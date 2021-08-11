@@ -1,13 +1,12 @@
 import React, { Fragment } from "react";
 import { Card, Image, ListGroup, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost } from "../actions/postActions";
+import { deletePost } from "../api/post";
 
 const Post = ({ post }: any) => {
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state: any) => state.userLogin);
 
   const deleteHandler = (id: string) => {
     if (window.confirm("Are you sure?")) {

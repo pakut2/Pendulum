@@ -5,37 +5,39 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Post from "../components/Post";
-import { listPosts } from "../actions/postActions";
-import { POST_CREATE_RESET } from "../constants/postConstants";
-import { AUTH_REGISTER_RESET } from "../constants/authConstants";
+import { listPosts } from "../api/post";
+import { postEnum } from "../store/enum/post.enum";
+import { authEnum } from "../store/enum/auth.enum";
+import { RootState } from "../store/interface/RootState.interface";
 
-const DashboardScreen = () => {
+const DashboardView = () => {
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
-  const userRegister = useSelector((state: any) => state.userRegister);
-  const { userInfo: registerUser } = userRegister;
+  const { userInfo: registerUser } = useSelector(
+    (state: RootState) => state.userRegister
+  );
 
-  const postList = useSelector((state: any) => state.postList);
-  const { posts, loading, error } = postList;
+  const { posts, loading, error } = useSelector(
+    (state: RootState) => state.postList
+  );
 
-  const postCreate = useSelector((state: any) => state.postCreate);
-  const { success } = postCreate;
+  const { success } = useSelector((state: RootState) => state.postCreate);
 
-  const postDelete = useSelector((state: any) => state.postDelete);
-  const { success: successDelete, error: errorDelete } = postDelete;
+  const { success: successDelete, error: errorDelete } = useSelector(
+    (state: RootState) => state.postDelete
+  );
 
   useEffect(() => {
     dispatch(listPosts());
 
     if (success) {
-      dispatch({ type: POST_CREATE_RESET });
+      dispatch({ type: postEnum.POST_CREATE_RESET });
     }
 
     if (registerUser) {
-      dispatch({ type: AUTH_REGISTER_RESET });
+      dispatch({ type: authEnum.AUTH_REGISTER_RESET });
     }
   }, [dispatch, success, successDelete, registerUser]);
 
@@ -79,4 +81,4 @@ const DashboardScreen = () => {
   );
 };
 
-export default DashboardScreen;
+export default DashboardView;

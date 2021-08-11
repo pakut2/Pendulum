@@ -1,29 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, SyntheticEvent } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { login } from "../actions/authActions";
+import { login } from "../api/auth";
+import { RootState } from "../store/interface/RootState.interface";
 
-const LoginScreen = ({ location, history }: any) => {
+const LoginView = () => {
+  const history = useHistory();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const { loading, error, userInfo } = useSelector(
+    (state: RootState) => state.userLogin
+  );
 
   useEffect(() => {
     if (userInfo) {
-      history.push(redirect);
+      history.push("/dashboard");
     }
-  }, [history, userInfo, redirect]);
+  }, [history, userInfo]);
 
-  const submitHandler = (e: any) => {
+  const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
     dispatch(login(email, password));
   };
@@ -44,7 +47,7 @@ const LoginScreen = ({ location, history }: any) => {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-          ></Form.Control>
+          />
         </Form.Group>
         <Form.Group className="py-1" controlId="password">
           <Form.Label>Password</Form.Label>
@@ -56,7 +59,7 @@ const LoginScreen = ({ location, history }: any) => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-          ></Form.Control>
+          />
         </Form.Group>
         <Button type="submit" variant="primary" className="my-1">
           Sign In
@@ -64,14 +67,11 @@ const LoginScreen = ({ location, history }: any) => {
       </Form>
       <Row className="py-3">
         <Col>
-          New User?{" "}
-          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
-            Register
-          </Link>
+          New User? <Link to="/register">Register</Link>
         </Col>
       </Row>
     </FormContainer>
   );
 };
 
-export default LoginScreen;
+export default LoginView;

@@ -1,6 +1,6 @@
 import axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { Fragment, SyntheticEvent, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import {
   Form,
   Button,
@@ -12,36 +12,39 @@ import {
 } from "react-bootstrap";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import FormContainer from "../components/FormContainer";
 import { useDispatch, useSelector } from "react-redux";
-import { getAuthenticatedUser, updateUser } from "../actions/userActions";
-import { USER_UPDATE_RESET } from "../constants/userConstants";
+import { getAuthenticatedUser, updateUser } from "../api/user";
+import { userEnum } from "../store/enum/user.enum";
+import { RootState } from "../store/interface/RootState.interface";
 
-const ProfileScreen = ({ history }: any) => {
+const ProfileView = () => {
+  const history = useHistory();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState(null);
+  const [password, setPassword] = useState<string | undefined>(undefined);
+  const [confirmPassword, setConfirmPassword] = useState<string | undefined>(
+    undefined
+  );
+  const [message, setMessage] = useState<string | null>(null);
   const [displayInputs, toggleInputs] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
 
-  const authenticatedUser = useSelector(
-    (state: any) => state.authenticatedUser
+  const { loading, error, user } = useSelector(
+    (state: RootState) => state.authenticatedUser
   );
-  const { loading, error, user } = authenticatedUser;
 
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
-  const userUpdate = useSelector((state: any) => state.userUpdate);
   const {
     error: userUpdateError,
     loading: userUpdateLoading,
     success,
-  } = userUpdate;
+  } = useSelector((state: RootState) => state.userUpdate);
 
   useEffect(() => {
     if (!userInfo) {
@@ -49,7 +52,7 @@ const ProfileScreen = ({ history }: any) => {
     } else {
       if (!user || success) {
         dispatch({
-          type: USER_UPDATE_RESET,
+          type: userEnum.USER_UPDATE_RESET,
         });
         dispatch(getAuthenticatedUser());
       } else {
@@ -66,18 +69,13 @@ const ProfileScreen = ({ history }: any) => {
     }
   }, [userInfo, history, user, dispatch, success]);
 
-  const submitHandler = (e: any) => {
+  const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      // @ts-ignore
       setMessage("Passwords do not match");
     } else {
-      if (password === "") {
-        dispatch(updateUser(userInfo.id, { name, email }));
-      } else {
-        dispatch(updateUser(userInfo.id, { name, email, password }));
-      }
+      dispatch(updateUser(userInfo.id, { name, email, password }));
     }
   };
 
@@ -113,39 +111,37 @@ const ProfileScreen = ({ history }: any) => {
       {error && <Message>{error}</Message>}
       {loading && <Loader />}
       <Container>
-        <Row className="justify-content-md-center">
-          <Col xs={12} md={6}>
-            <Link className="btn btn-outline-light my-3" to="/dashboard">
-              Dashboard
-            </Link>
-            <Card border="secondary">
-              <Card.Header className="text-center">
-                <Image
-                  src={image}
-                  width="120"
-                  height="120"
-                  roundedCircle
-                  className="mx-auto"
-                />
-              </Card.Header>
-              <Card.Body className="text-center">
-                <Card.Title>{name}</Card.Title>
-                <Card.Text>
-                  <i className="fa fa-envelope-o"></i> {email}
-                </Card.Text>
-              </Card.Body>
-              <Button
-                type="button"
-                variant="primary"
-                onClick={() => {
-                  toggleInputs(!displayInputs);
-                }}
-              >
-                Edit Profile
-              </Button>
-            </Card>
-          </Col>
-        </Row>
+        <FormContainer>
+          <Link className="btn btn-outline-light my-3" to="/dashboard">
+            Dashboard
+          </Link>
+          <Card border="secondary">
+            <Card.Header className="text-center">
+              <Image
+                src={image}
+                width="120"
+                height="120"
+                roundedCircle
+                className="mx-auto"
+              />
+            </Card.Header>
+            <Card.Body className="text-center">
+              <Card.Title>{name}</Card.Title>
+              <Card.Text>
+                <i className="fa fa-envelope-o"></i> {email}
+              </Card.Text>
+            </Card.Body>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => {
+                toggleInputs(!displayInputs);
+              }}
+            >
+              Edit Profile
+            </Button>
+          </Card>
+        </FormContainer>
       </Container>
 
       {displayInputs && (
@@ -165,7 +161,7 @@ const ProfileScreen = ({ history }: any) => {
                   onChange={(e) => {
                     setName(e.target.value);
                   }}
-                ></Form.Control>
+                />
               </Form.Group>
               <Form.Group className="py-1" controlId="email">
                 <Form.Label>Email Address</Form.Label>
@@ -176,7 +172,7 @@ const ProfileScreen = ({ history }: any) => {
                   onChange={(e) => {
                     setEmail(e.target.value);
                   }}
-                ></Form.Control>
+                />
               </Form.Group>
               <Form.Group className="py-1" controlId="password">
                 <Form.Label>Password</Form.Label>
@@ -187,7 +183,7 @@ const ProfileScreen = ({ history }: any) => {
                   onChange={(e) => {
                     setPassword(e.target.value);
                   }}
-                ></Form.Control>
+                />
               </Form.Group>
               <Form.Group className="py-1" controlId="confirmPassword">
                 <Form.Label>Confirm Password</Form.Label>
@@ -198,7 +194,7 @@ const ProfileScreen = ({ history }: any) => {
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
                   }}
-                ></Form.Control>
+                />
               </Form.Group>
               <Form.Group className="py-1" controlId="image">
                 <Form.Label>Avatar</Form.Label>
@@ -220,4 +216,4 @@ const ProfileScreen = ({ history }: any) => {
   );
 };
 
-export default ProfileScreen;
+export default ProfileView;

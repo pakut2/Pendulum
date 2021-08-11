@@ -1,11 +1,13 @@
 import React, { Fragment, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { RootState } from "../store/interface/RootState.interface";
 
-const LandingScreen = ({ history }: any) => {
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+const LandingView = () => {
+  const history = useHistory();
+
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
   useEffect(() => {
     if (userInfo) {
@@ -15,7 +17,7 @@ const LandingScreen = ({ history }: any) => {
 
   return (
     <Fragment>
-      <section className="background-img"></section>
+      <section className="background-img" />
       <Container>
         <Row className="justify-content-center align">
           <Col xs={12} md={6}>
@@ -45,4 +47,4 @@ const LandingScreen = ({ history }: any) => {
   );
 };
 
-export default LandingScreen;
+export default LandingView;

@@ -1,26 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, SyntheticEvent } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { register } from "../actions/authActions";
+import { register } from "../api/auth";
+import { RootState } from "../store/interface/RootState.interface";
 
-const RegisterScreen = ({ location, history }: any) => {
+const RegisterView = () => {
+  const history = useHistory();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
-  const userRegister = useSelector((state: any) => state.userRegister);
-  const { loading, error, userInfo: user } = userRegister;
+  const {
+    loading,
+    error,
+    userInfo: user,
+  } = useSelector((state: RootState) => state.userRegister);
 
   useEffect(() => {
     if (userInfo || user) {
@@ -28,11 +33,10 @@ const RegisterScreen = ({ location, history }: any) => {
     }
   }, [history, userInfo, user]);
 
-  const submitHandler = (e: any) => {
+  const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      // @ts-ignore
       setMessage("Passwords do not match");
     } else {
       dispatch(register(name, email, password));
@@ -56,7 +60,7 @@ const RegisterScreen = ({ location, history }: any) => {
             onChange={(e) => {
               setName(e.target.value);
             }}
-          ></Form.Control>
+          />
         </Form.Group>
         <Form.Group className="py-1" controlId="email">
           <Form.Label>Email Address</Form.Label>
@@ -68,7 +72,7 @@ const RegisterScreen = ({ location, history }: any) => {
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-          ></Form.Control>
+          />
         </Form.Group>
         <Form.Group className="py-1" controlId="password">
           <Form.Label>Password</Form.Label>
@@ -80,7 +84,7 @@ const RegisterScreen = ({ location, history }: any) => {
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-          ></Form.Control>
+          />
         </Form.Group>
         <Form.Group className="py-1" controlId="confirmPassword">
           <Form.Label>Confirm Password</Form.Label>
@@ -92,7 +96,7 @@ const RegisterScreen = ({ location, history }: any) => {
             onChange={(e) => {
               setConfirmPassword(e.target.value);
             }}
-          ></Form.Control>
+          />
         </Form.Group>
         <Button type="submit" variant="primary" className="my-1">
           Register
@@ -107,4 +111,4 @@ const RegisterScreen = ({ location, history }: any) => {
   );
 };
 
-export default RegisterScreen;
+export default RegisterView;

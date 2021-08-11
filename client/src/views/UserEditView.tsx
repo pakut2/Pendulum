@@ -1,15 +1,22 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { Fragment, useState, useEffect, SyntheticEvent } from "react";
+import { Link, useHistory, RouteComponentProps } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import FormContainer from "../components/FormContainer";
-import { adminUpdateUser, getUserDetails } from "../actions/userActions";
-import { USER_ADMIN_UPDATE_RESET } from "../constants/userConstants";
+import { adminUpdateUser, getUserDetails } from "../api/user";
+import { userEnum } from "../store/enum/user.enum";
+import { RootState } from "../store/interface/RootState.interface";
 
-const UserEditScreen = ({ match, history }: any) => {
+interface MatchParams {
+  id: string;
+}
+
+const UserEditView = ({ match }: RouteComponentProps<MatchParams>) => {
   const userId = match.params.id;
+
+  const history = useHistory();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,19 +24,19 @@ const UserEditScreen = ({ match, history }: any) => {
 
   const dispatch = useDispatch();
 
-  const userGetDetails = useSelector((state: any) => state.userGetDetails);
-  const { loading, error, user } = userGetDetails;
+  const { loading, error, user } = useSelector(
+    (state: RootState) => state.userGetDetails
+  );
 
-  const userAdminUpdate = useSelector((state: any) => state.userAdminUpdate);
   const {
     loading: loadingUpdate,
     error: errorUpdate,
     success,
-  } = userAdminUpdate;
+  } = useSelector((state: RootState) => state.userAdminUpdate);
 
   useEffect(() => {
     if (success) {
-      dispatch({ type: USER_ADMIN_UPDATE_RESET });
+      dispatch({ type: userEnum.USER_ADMIN_UPDATE_RESET });
       history.push("/admin/userList");
     } else {
       if (!user || user.id !== userId) {
@@ -46,7 +53,7 @@ const UserEditScreen = ({ match, history }: any) => {
     }
   }, [user, userId, dispatch, history, success]);
 
-  const submitHandler = (e: any) => {
+  const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
 
     if (role) {
@@ -79,7 +86,7 @@ const UserEditScreen = ({ match, history }: any) => {
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
-              ></Form.Control>
+              />
             </Form.Group>
             <Form.Group className="py-1" controlId="email">
               <Form.Label>Email Address</Form.Label>
@@ -90,7 +97,7 @@ const UserEditScreen = ({ match, history }: any) => {
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
-              ></Form.Control>
+              />
             </Form.Group>
             <Form.Group className="py-1" controlId="isAdmin">
               <Form.Check
@@ -100,7 +107,7 @@ const UserEditScreen = ({ match, history }: any) => {
                 onChange={(e) => {
                   setRole(e.target.checked);
                 }}
-              ></Form.Check>
+              />
             </Form.Group>
             <Button type="submit" variant="primary">
               Update
@@ -112,4 +119,4 @@ const UserEditScreen = ({ match, history }: any) => {
   );
 };
 
-export default UserEditScreen;
+export default UserEditView;

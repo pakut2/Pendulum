@@ -1,26 +1,30 @@
 import React, { Fragment, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { listUsers, deleteUser } from "../actions/userActions";
-import { USER_DETAILS_RESET } from "../constants/userConstants";
+import { listUsers, deleteUser } from "../api/user";
+import { userEnum } from "../store/enum/user.enum";
+import { RootState } from "../store/interface/RootState.interface";
 
-const UserListScreen = ({ history }: any) => {
+const UserListView = () => {
+  const history = useHistory();
+
   const dispatch = useDispatch();
 
-  const userList = useSelector((state: any) => state.userList);
-  const { loading, error, users } = userList;
+  const { loading, error, users } = useSelector(
+    (state: RootState) => state.userList
+  );
 
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
-  const userDelete = useSelector((state: any) => state.userDelete);
-  const { success: successDelete } = userDelete;
+  const { success: successDelete } = useSelector(
+    (state: RootState) => state.userDelete
+  );
 
-  const userGetDetails = useSelector((state: any) => state.userGetDetails);
-  const { user } = userGetDetails;
+  const { user } = useSelector((state: RootState) => state.userGetDetails);
 
   useEffect(() => {
     if (userInfo && userInfo.role === "admin") {
@@ -30,7 +34,7 @@ const UserListScreen = ({ history }: any) => {
     }
 
     if (user) {
-      dispatch({ type: USER_DETAILS_RESET });
+      dispatch({ type: userEnum.USER_DETAILS_RESET });
     }
   }, [dispatch, history, userInfo, successDelete, user]);
 
@@ -98,4 +102,4 @@ const UserListScreen = ({ history }: any) => {
   );
 };
 
-export default UserListScreen;
+export default UserListView;

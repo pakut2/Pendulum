@@ -28,7 +28,7 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(LocalAuthenticationGuard)
   @Post("login")
-  async logIn(@Req() request: RequestWithUser) {
+  async login(@Req() request: RequestWithUser) {
     const { user } = request;
     const cookie = this.authService.getCookieWithJwtToken(user.id);
     request.res.setHeader("Set-Cookie", cookie);

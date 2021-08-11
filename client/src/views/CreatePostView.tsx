@@ -1,29 +1,33 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, Fragment, SyntheticEvent } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { Col, Container, Row, Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-import { listLines } from "../actions/ztmActions";
-import { createPost } from "../actions/postActions";
+import { listLines } from "../api/ztm";
+import { createPost } from "../api/post";
+import { RootState } from "../store/interface/RootState.interface";
 
-const CreatePostScreen = ({ history }: any) => {
+const CreatePostView = () => {
+  const history = useHistory();
+
   const [lineNumber, setLineNumber] = useState("");
   const [direction, setDirection] = useState("");
   const [closestStop, setClosestStop] = useState("");
-  const [vehicleCode, setVehicleCode] = useState("");
-  const [description, setDescription] = useState("");
+  const [vehicleCode, setVehicleCode] = useState<string | undefined>(undefined);
+  const [description, setDescription] = useState<string | undefined>(undefined);
 
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
-  const linesList = useSelector((state: any) => state.linesList);
-  const { lines, loading, error } = linesList;
+  const { lines, loading, error } = useSelector(
+    (state: RootState) => state.linesList
+  );
 
-  const postCreate = useSelector((state: any) => state.postCreate);
-  const { success, error: postCreateError } = postCreate;
+  const { success, error: postCreateError } = useSelector(
+    (state: RootState) => state.postCreate
+  );
 
   useEffect(() => {
     if (!userInfo) {
@@ -37,52 +41,18 @@ const CreatePostScreen = ({ history }: any) => {
     dispatch(listLines());
   }, [dispatch, history, userInfo, success]);
 
-  const submitHandler = (e: any) => {
+  const submitHandler = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    if (vehicleCode !== "" && description !== "") {
-      dispatch(
-        createPost({
-          line: lineNumber,
-          direction,
-          closestStop,
-          vehicleCode,
-          description,
-        })
-      );
-    }
-
-    if (vehicleCode === "") {
-      dispatch(
-        createPost({
-          line: lineNumber,
-          direction,
-          closestStop,
-          description,
-        })
-      );
-    }
-
-    if (description === "") {
-      dispatch(
-        createPost({
-          line: lineNumber,
-          direction,
-          closestStop,
-          vehicleCode,
-        })
-      );
-    }
-
-    if (vehicleCode === "" && description === "") {
-      dispatch(
-        createPost({
-          line: lineNumber,
-          direction,
-          closestStop,
-        })
-      );
-    }
+    dispatch(
+      createPost({
+        line: lineNumber,
+        direction,
+        closestStop,
+        vehicleCode,
+        description,
+      })
+    );
   };
 
   return (
@@ -172,7 +142,7 @@ const CreatePostScreen = ({ history }: any) => {
                       onChange={(e) => {
                         setVehicleCode(e.target.value);
                       }}
-                    ></Form.Control>
+                    />
                     <small className="form-text text-muted">Optional</small>
                   </Form.Group>
                 </Col>
@@ -187,7 +157,7 @@ const CreatePostScreen = ({ history }: any) => {
                       onChange={(e) => {
                         setClosestStop(e.target.value);
                       }}
-                    ></Form.Control>
+                    />
                   </Form.Group>
                 </Col>
               </Row>
@@ -200,7 +170,7 @@ const CreatePostScreen = ({ history }: any) => {
                   placeholder="Enter Description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                ></Form.Control>
+                />
                 <small className="form-text text-muted">Optional</small>
               </Form.Group>
               <Button type="submit" variant="danger" className="my-3">
@@ -214,4 +184,4 @@ const CreatePostScreen = ({ history }: any) => {
   );
 };
 
-export default CreatePostScreen;
+export default CreatePostView;

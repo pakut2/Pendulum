@@ -2,13 +2,12 @@ import React, { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown, Image } from "react-bootstrap";
-import { logout } from "../actions/authActions";
+import { logout } from "../api/auth";
 
 const Header = () => {
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state: any) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userInfo } = useSelector((state: any) => state.userLogin);
 
   const logoutHandler = () => {
     dispatch(logout());

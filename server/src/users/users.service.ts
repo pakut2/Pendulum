@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import User from "./entities/user.entity";
@@ -18,13 +18,16 @@ export class UsersService {
     private readonly postsService: PostsService
   ) {}
 
+  private readonly logger = new Logger(UsersService.name);
+
   async getById(id: string) {
-    const user = await this.usersRepository.findOne(id, {
-      relations: ["posts"],
-    });
+    const user = await this.usersRepository.findOne({ id });
+    this.logger.log("Getting user by ID");
+
     if (user) {
       return user;
     }
+    this.logger.error("User does not exist");
     throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
   }
 
