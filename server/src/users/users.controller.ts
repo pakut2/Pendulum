@@ -12,8 +12,8 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { Roles } from "src/auth/decorators/roles.decorator";
-import { RolesGuard } from "src/auth/guards/roles.guard";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { RolesGuard } from "../auth/guards/roles.guard";
 import JwtAuthenticationGuard from "../auth/guards/jwt.guard";
 import RequestWithUser from "../auth/interfaces/requestWithUser";
 import UpdateDto from "./dto/update.dto";

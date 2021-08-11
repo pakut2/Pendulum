@@ -7,17 +7,21 @@ import * as bcrypt from "bcrypt";
 import PostgresErrorCode from "../database/postgresErrorCodes.enum";
 import { FilesService } from "../files/files.service";
 import UpdateDto from "./dto/update.dto";
+import { PostsService } from "src/posts/posts.service";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private readonly filesService: FilesService
+    private readonly filesService: FilesService,
+    private readonly postsService: PostsService
   ) {}
 
   async getById(id: string) {
-    const user = await this.usersRepository.findOne({ id });
+    const user = await this.usersRepository.findOne(id, {
+      relations: ["posts"],
+    });
     if (user) {
       return user;
     }
@@ -89,9 +93,15 @@ export class UsersService {
 
   async delete(id: string) {
     try {
-      const user = await this.usersRepository.findOne({ id });
+      const user = await this.usersRepository.findOne(id, {
+        relations: ["posts"],
+      });
 
       if (user) {
+        user.posts.forEach(async (post) => {
+          await this.postsService.delete(post.id);
+        });
+
         return this.usersRepository.delete(id);
       }
     } catch (err) {

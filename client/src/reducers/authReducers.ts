@@ -5,6 +5,7 @@ import {
   AUTH_LOGOUT,
   AUTH_REGISTER_FAIL,
   AUTH_REGISTER_REQUEST,
+  AUTH_REGISTER_RESET,
   AUTH_REGISTER_SUCCESS,
 } from "../constants/authConstants";
 
@@ -35,6 +36,8 @@ export const userRegisterReducer = (state = {}, action: any) => {
       return { loading: false, userInfo: payload };
     case AUTH_REGISTER_FAIL:
       return { loading: false, error: payload };
+    case AUTH_REGISTER_RESET:
+      return {};
     default:
       return state;
   }

@@ -7,12 +7,16 @@ import Loader from "../components/Loader";
 import Post from "../components/Post";
 import { listPosts } from "../actions/postActions";
 import { POST_CREATE_RESET } from "../constants/postConstants";
+import { AUTH_REGISTER_RESET } from "../constants/authConstants";
 
 const DashboardScreen = () => {
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state: any) => state.userLogin);
   const { userInfo } = userLogin;
+
+  const userRegister = useSelector((state: any) => state.userRegister);
+  const { userInfo: registerUser } = userRegister;
 
   const postList = useSelector((state: any) => state.postList);
   const { posts, loading, error } = postList;
@@ -29,7 +33,11 @@ const DashboardScreen = () => {
     if (success) {
       dispatch({ type: POST_CREATE_RESET });
     }
-  }, [dispatch, success, successDelete]);
+
+    if (registerUser) {
+      dispatch({ type: AUTH_REGISTER_RESET });
+    }
+  }, [dispatch, success, successDelete, registerUser]);
 
   return (
     <Container>
