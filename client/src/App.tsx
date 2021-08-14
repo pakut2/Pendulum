@@ -11,6 +11,7 @@ import ProfileView from "./views/ProfileView";
 import UserListView from "./views/UserListView";
 import CreatePostView from "./views/CreatePostView";
 import UserEditView from "./views/UserEditView";
+import MapView from "./views/MapView";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/profile" component={ProfileView} />
             <Route path="/dashboard" component={DashboardView} />
             <Route path="/post" component={CreatePostView} />
+            <Route exact path="/map/:id" component={MapView} />
             <Route path="/admin/userlist" component={UserListView} />
             <Route exact path="/admin/user/:id/edit" component={UserEditView} />
             <Route exact path="/" component={LandingView} />

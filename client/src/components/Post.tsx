@@ -1,17 +1,23 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 import { Card, Image, ListGroup, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost } from "../api/post";
+import { deletePost, likePost } from "../api/post";
+import { RootState } from "../store/interface/RootState.interface";
 
 const Post = ({ post }: any) => {
   const dispatch = useDispatch();
 
-  const { userInfo } = useSelector((state: any) => state.userLogin);
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
   const deleteHandler = (id: string) => {
     if (window.confirm("Are you sure?")) {
       dispatch(deletePost(id));
     }
+  };
+
+  const likeHandler = (id: string) => {
+    dispatch(likePost(id));
   };
 
   return (
@@ -32,6 +38,15 @@ const Post = ({ post }: any) => {
             />{" "}
             {post.author.name}
           </Col>
+
+          {post.vehicleCode && (
+            <Col xs={1}>
+              <Link className="btn btn-primary" to={`map/${post.id}`}>
+                <i className="fa fa-map-marker"></i>
+              </Link>
+            </Col>
+          )}
+
           <Col xs={2} sm={1}>
             {userInfo && userInfo.id === post.author.id && (
               <Button
@@ -71,9 +86,20 @@ const Post = ({ post }: any) => {
             <ListGroup.Item>Description: {post.description}</ListGroup.Item>
           )}
         </ListGroup>
-        <Card.Text className="btn btn-secondary mx-3">
-          <i className="fa fa-chevron-up"></i> {post.likes}
-        </Card.Text>
+        {userInfo ? (
+          <Card.Text
+            className="btn btn-secondary mx-3"
+            onClick={() => {
+              likeHandler(post.id);
+            }}
+          >
+            <i className="fa fa-chevron-up"></i> {post.likes.length}
+          </Card.Text>
+        ) : (
+          <Link className="btn btn-secondary mx-3" to="/login">
+            <i className="fa fa-chevron-up"></i> {post.likes.length}
+          </Link>
+        )}
       </Card.Body>
     </Fragment>
   );

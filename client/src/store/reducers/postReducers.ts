@@ -22,6 +22,26 @@ export const postListReducer = (
   }
 };
 
+export const postGetDetailsReducer = (state = {}, action: PayloadAction) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case postEnum.POST_GET_DETAILS_REQUEST:
+      return { loading: true };
+    case postEnum.POST_GET_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        post: payload,
+      };
+    case postEnum.POST_GET_DETAILS_FAIL:
+      return { loading: false, error: payload };
+    case postEnum.POST_GET_DETAILS_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
 export const postCreateReducer = (state = {}, action: PayloadAction) => {
   const { type, payload } = action;
 
@@ -54,6 +74,24 @@ export const postDeleteReducer = (state = {}, action: PayloadAction) => {
         success: true,
       };
     case postEnum.POST_DELETE_FAIL:
+      return { loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const postLikeReducer = (state = {}, action: PayloadAction) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case postEnum.POST_LIKE_REQUEST:
+      return { loading: true };
+    case postEnum.POST_LIKE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case postEnum.POST_LIKE_FAIL:
       return { loading: false, error: payload };
     default:
       return state;

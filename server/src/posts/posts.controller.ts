@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
   UseInterceptors,
@@ -25,6 +26,11 @@ export class PostsController {
     return this.postsService.findAll();
   }
 
+  @Get(":id")
+  async getPostById(@Param("id") id: string) {
+    return this.postsService.findOne(id);
+  }
+
   @UseGuards(JwtAuthenticationGuard)
   @Post()
   async createPost(
@@ -36,7 +42,13 @@ export class PostsController {
 
   @UseGuards(JwtAuthenticationGuard)
   @Delete(":id")
-  async deletePost(@Param("id") id: string) {
-    return this.postsService.delete(id);
+  async deletePost(@Param("id") id: string, @Req() request: RequestWithUser) {
+    return this.postsService.delete(id, request.user);
+  }
+
+  @UseGuards(JwtAuthenticationGuard)
+  @Put("like/:id")
+  async likePost(@Param("id") id: string, @Req() request: RequestWithUser) {
+    await this.postsService.like(id, request.user);
   }
 }

@@ -39,6 +39,12 @@ export interface RootState {
     posts: Array<Object>;
   };
 
+  postGetDetails: {
+    loading: boolean;
+    error: string;
+    post: Object | any;
+  };
+
   postCreate: {
     success: boolean;
     error: string;
@@ -49,5 +55,13 @@ export interface RootState {
     error: string;
   };
 
+  postLike: { success: boolean; error: string };
+
   linesList: { loading: boolean; error: string; lines: Array<Object> };
+
+  getLocation: {
+    loading: boolean;
+    error: string;
+    line: Object | any;
+  };
 }

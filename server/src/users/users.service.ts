@@ -22,11 +22,12 @@ export class UsersService {
 
   async getById(id: string) {
     const user = await this.usersRepository.findOne({ id });
-    this.logger.log("Getting user by ID");
+    this.logger.log(`Getting user by ID - ${id}`);
 
     if (user) {
       return user;
     }
+
     this.logger.error("User does not exist");
     throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
   }
@@ -94,7 +95,7 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async delete(id: string) {
+  async delete(id: string, userReq: User) {
     try {
       const user = await this.usersRepository.findOne(id, {
         relations: ["posts"],
@@ -102,7 +103,7 @@ export class UsersService {
 
       if (user) {
         user.posts.forEach(async (post) => {
-          await this.postsService.delete(post.id);
+          await this.postsService.delete(post.id, userReq);
         });
 
         return this.usersRepository.delete(id);

@@ -10,10 +10,12 @@ import {
 } from "./userReducers";
 import {
   postListReducer,
+  postGetDetailsReducer,
   postCreateReducer,
   postDeleteReducer,
+  postLikeReducer,
 } from "./postReducers";
-import { linesListReducer } from "./ztmReducers";
+import { linesListReducer, getLocationReducer } from "./ztmReducers";
 
 export default combineReducers({
   userLogin: userLoginReducer,
@@ -25,7 +27,10 @@ export default combineReducers({
   userGetDetails: userGetDetailsReducer,
   userAdminUpdate: userAdminUpdateReducer,
   postList: postListReducer,
+  postGetDetails: postGetDetailsReducer,
   postCreate: postCreateReducer,
   postDelete: postDeleteReducer,
+  postLike: postLikeReducer,
   linesList: linesListReducer,
+  getLocation: getLocationReducer,
 });

@@ -12,7 +12,17 @@ export class PostsService {
   ) {}
 
   async findAll() {
-    return this.postsRepository.find({ relations: ["author"] });
+    const posts = await this.postsRepository.find({
+      relations: ["author"],
+    });
+
+    posts.sort((a, b) => (a.likes.length < b.likes.length ? 1 : -1));
+
+    return posts;
+  }
+
+  async findOne(id: string) {
+    return this.postsRepository.findOne({ id });
   }
 
   async create(postData: createPostDto, user: User) {
@@ -24,12 +34,36 @@ export class PostsService {
     return newPost;
   }
 
-  async delete(id: string) {
-    try {
-      const post = await this.postsRepository.findOne({ id });
+  async delete(id: string, user: User) {
+    const post = await this.postsRepository.findOne(id, {
+      relations: ["author"],
+    });
 
+    if (post.author.id === user.id || user.role === "admin") {
       if (post) {
         return this.postsRepository.delete(id);
+      } else {
+        throw new HttpException("Post does not exist", HttpStatus.NOT_FOUND);
+      }
+    } else {
+      throw new HttpException("Invalid Credentials", HttpStatus.FORBIDDEN);
+    }
+  }
+
+  async like(postId: string, user: User) {
+    try {
+      const post = await this.postsRepository.findOne({ id: postId });
+      const { likes } = post;
+      const index = likes.indexOf(user.id);
+
+      if (post) {
+        if (index > -1) {
+          likes.splice(index, 1);
+          await this.postsRepository.save(post);
+        } else {
+          likes.push(user.id);
+          await this.postsRepository.save(post);
+        }
       }
     } catch (err) {
       throw new HttpException("Post does not exist", HttpStatus.NOT_FOUND);

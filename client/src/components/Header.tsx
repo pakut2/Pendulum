@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown, Image } from "react-bootstrap";
 import { logout } from "../api/auth";
+import { RootState } from "../store/interface/RootState.interface";
 
 const Header = () => {
   const dispatch = useDispatch();
 
-  const { userInfo } = useSelector((state: any) => state.userLogin);
+  const { userInfo } = useSelector((state: RootState) => state.userLogin);
 
   const logoutHandler = () => {
     dispatch(logout());

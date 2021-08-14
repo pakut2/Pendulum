@@ -22,6 +22,25 @@ export const listPosts =
     }
   };
 
+export const getPostDetails =
+  (id: string) => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
+    try {
+      dispatch({ type: postEnum.POST_GET_DETAILS_REQUEST });
+
+      const { data } = await axios.get(`/api/posts/${id}`);
+
+      dispatch({ type: postEnum.POST_GET_DETAILS_SUCCESS, payload: data });
+    } catch (err) {
+      dispatch({
+        type: postEnum.POST_GET_DETAILS_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
+  };
+
 interface PostData {
   line: string;
   direction: string;
@@ -71,6 +90,25 @@ export const deletePost =
     } catch (err) {
       dispatch({
         type: postEnum.POST_DELETE_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
+  };
+
+export const likePost =
+  (id: string) => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
+    try {
+      dispatch({ type: postEnum.POST_LIKE_REQUEST });
+
+      await axios.put(`/api/posts/like/${id}`);
+
+      dispatch({ type: postEnum.POST_LIKE_SUCCESS });
+    } catch (err) {
+      dispatch({
+        type: postEnum.POST_LIKE_FAIL,
         payload:
           err.response && err.response.data.message
             ? err.response.data.message

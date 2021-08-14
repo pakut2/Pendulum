@@ -37,3 +37,20 @@ h3 {
   position: relative;
   top: 25vh;
 }
+
+.marker {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.marker:hover {
+  color: #375a7f;
+}
+
+.popup-text {
+  color: #303030;
+}
+
+.bold {
+  font-weight: bold;
+}

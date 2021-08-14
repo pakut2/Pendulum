@@ -77,9 +77,9 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   @Delete(":id")
-  async deleteUser(@Param("id") id: string) {
+  async deleteUser(@Param("id") id: string, @Req() request: RequestWithUser) {
     await this.usersService.deleteAvatar(id);
-    return this.usersService.delete(id);
+    return this.usersService.delete(id, request.user);
   }
 
   @UseGuards(RolesGuard)

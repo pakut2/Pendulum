@@ -27,8 +27,8 @@ class Post {
   @Column({ nullable: true })
   public description?: string;
 
-  @Column({ default: 0 })
-  public likes?: number;
+  @Column("text", { default: [], array: true })
+  public likes?: string[];
 
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;

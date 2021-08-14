@@ -36,3 +36,52 @@ export const listLines =
       });
     }
   };
+
+export const getLocation =
+  (vehicleCode: string) =>
+  async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
+    try {
+      dispatch({ type: ztmEnum.ZTM_GET_LOCATION_REQUEST });
+
+      const { data } = await axios.get(
+        "https://ckan2.multimediagdansk.pl/gpsPositions"
+      );
+
+      let validData;
+
+      data.Vehicles.forEach((line: any) => {
+        if (vehicleCode === line.VehicleCode) {
+          validData = line;
+        }
+      });
+
+      dispatch({
+        type: ztmEnum.ZTM_GET_LOCATION_SUCCESS,
+        payload: validData,
+      });
+    } catch (err) {
+      dispatch({
+        type: ztmEnum.ZTM_GET_LOCATION_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
+  };
+
+export const getLocationInterval = async (vehicleCode: string) => {
+  const { data } = await axios.get(
+    "https://ckan2.multimediagdansk.pl/gpsPositions"
+  );
+
+  let validData;
+
+  data.Vehicles.forEach((line: any) => {
+    if (vehicleCode === line.VehicleCode) {
+      validData = line;
+    }
+  });
+
+  return validData;
+};
