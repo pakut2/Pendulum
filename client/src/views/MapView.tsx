@@ -18,6 +18,18 @@ interface MatchParams {
   id: string;
 }
 
+const navStyle = {
+  top: 0,
+  left: 0,
+  padding: "10px",
+};
+
+const geolocateStyle = {
+  top: 100,
+  left: 0,
+  padding: "10px",
+};
+
 const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
   const postId = match.params.id;
 
@@ -93,10 +105,8 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
                 setViewport(nextViewport)
               }
             >
-              <NavigationControl style={{ padding: "10px" }} />
-              <GeolocateControl
-                style={{ padding: "10px", paddingTop: "100px" }}
-              />
+              <NavigationControl style={navStyle} />
+              <GeolocateControl style={geolocateStyle} />
               {/*@ts-ignore*/}
               <Marker longitude={lon} latitude={lat} onClick={setPopupInfo}>
                 <i className="fa fa-bus marker"></i>

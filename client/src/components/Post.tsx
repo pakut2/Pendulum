@@ -4,11 +4,15 @@ import { Card, Image, ListGroup, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, likePost } from "../api/post";
 import { RootState } from "../store/interface/RootState.interface";
+import { DateTime } from "luxon";
 
 const Post = ({ post }: any) => {
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.userLogin);
+
+  const formattedTime = DateTime.fromISO(post.createdAt);
+  const diff = DateTime.now().diff(formattedTime, ["hours", "minutes"]);
 
   const deleteHandler = (id: string) => {
     if (window.confirm("Are you sure?")) {
@@ -40,7 +44,7 @@ const Post = ({ post }: any) => {
           </Col>
 
           {post.vehicleCode && (
-            <Col xs={1}>
+            <Col xs={2} sm={1}>
               <Link className="btn btn-primary" to={`map/${post.id}`}>
                 <i className="fa fa-map-marker"></i>
               </Link>
@@ -86,20 +90,27 @@ const Post = ({ post }: any) => {
             <ListGroup.Item>Description: {post.description}</ListGroup.Item>
           )}
         </ListGroup>
-        {userInfo ? (
-          <Card.Text
-            className="btn btn-secondary mx-3"
-            onClick={() => {
-              likeHandler(post.id);
-            }}
-          >
-            <i className="fa fa-chevron-up"></i> {post.likes.length}
-          </Card.Text>
-        ) : (
-          <Link className="btn btn-secondary mx-3" to="/login">
-            <i className="fa fa-chevron-up"></i> {post.likes.length}
-          </Link>
-        )}
+        <Row className="pt-3">
+          <Col>
+            {userInfo ? (
+              <Card.Text
+                className="btn btn-secondary mx-3"
+                onClick={() => {
+                  likeHandler(post.id);
+                }}
+              >
+                <i className="fa fa-chevron-up"></i> {post.likes.length}
+              </Card.Text>
+            ) : (
+              <Link className="btn btn-secondary mx-3" to="/login">
+                <i className="fa fa-chevron-up"></i> {post.likes.length}
+              </Link>
+            )}
+          </Col>
+          <Col xs={4} sm={2}>
+            {Math.round(diff.minutes)} min. ago
+          </Col>
+        </Row>
       </Card.Body>
     </Fragment>
   );
