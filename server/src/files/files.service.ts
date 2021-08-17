@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import PublicFile from "./entities/publicFile.entity";
@@ -14,7 +14,10 @@ export class FilesService {
     private readonly configService: ConfigService
   ) {}
 
+  private readonly logger = new Logger(FilesService.name);
+
   async uploadPublicFile(dataBuffer: Buffer, filename: string) {
+    this.logger.log(`Uploading avatar - ${filename}`);
     const s3 = new S3();
     const uploadResult = await s3
       .upload({
@@ -34,6 +37,7 @@ export class FilesService {
   }
 
   async deletePublicFile(fileId: string) {
+    this.logger.log(`Deleting avatar - ${fileId}`);
     const file = await this.publicFilesRepository.findOne({ id: fileId });
     const s3 = new S3();
     await s3

@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { RouteComponentProps } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/interface/RootState.interface";
@@ -36,7 +37,6 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
   const [lat, setLat] = useState(54);
   const [lon, setLon] = useState(18);
   const [popupInfo, setPopupInfo] = useState(null);
-
   const [viewport, setViewport] = useState({
     height: "75vh",
     width: "100%",
@@ -74,17 +74,17 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
         });
       }
     }
+
+    if (line) {
+      setInterval(async () => {
+        // @ts-ignore
+        const { Lat, Lon } = await getLocationInterval(post.vehicleCode);
+
+        setLat(Lat);
+        setLon(Lon);
+      }, 10000);
+    }
   }, [dispatch, post, line, postId]);
-
-  if (line) {
-    setInterval(async () => {
-      // @ts-ignore
-      const { Lat, Lon } = await getLocationInterval(post.vehicleCode);
-
-      setLat(Lat);
-      setLon(Lon);
-    }, 10000);
-  }
 
   return (
     <Fragment>
@@ -105,6 +105,14 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
                 setViewport(nextViewport)
               }
             >
+              <Link
+                className="btn btn-danger"
+                to="/dashboard"
+                style={{ marginLeft: "90%" }}
+              >
+                <i className="fa fa-times-circle-o"></i>
+              </Link>
+
               <NavigationControl style={navStyle} />
               <GeolocateControl style={geolocateStyle} />
               {/*@ts-ignore*/}

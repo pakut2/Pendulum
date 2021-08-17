@@ -5,6 +5,7 @@ import * as cookieParser from "cookie-parser";
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { config } from "aws-sdk";
+import { HttpExceptionFilter } from "./shared/filters/http-exception.filter";
 declare const module: any;
 
 async function bootstrap() {
@@ -13,6 +14,7 @@ async function bootstrap() {
   });
   app.setGlobalPrefix("api");
   app.useGlobalPipes(new ValidationPipe());
+
   app.use(cookieParser());
 
   const configService = app.get(ConfigService);
@@ -44,6 +46,7 @@ async function bootstrap() {
     module.hot.dispose(() => app.close());
   }
 
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.enableCors();
 
   const PORT = process.env.PORT || 5000;

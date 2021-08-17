@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { AuthModule } from "./auth/auth.module";
 import { PostsModule } from "./posts/posts.module";
 import { ConfigModule } from "@nestjs/config";
-import { DatabaseModule } from "../../shared/database/database.module";
+import { DatabaseModule } from "./shared/database/database.module";
 import { UsersModule } from "./users/users.module";
 import { FilesModule } from "./files/files.module";
-import configuration from "../../shared/config/configuration";
+import configuration from "./shared/config/configuration";
 
 @Module({
   imports: [
@@ -25,3 +25,5 @@ export class AppModule {}
 //! file upload : front - s3 direct / signed url
 //* exports
 //? use global guards - exclude endpoints
+//* luxon npm
+//* create app from context

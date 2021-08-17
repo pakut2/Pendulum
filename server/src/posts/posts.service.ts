@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import User from "../users/entities/user.entity";
 import { Repository } from "typeorm";
@@ -11,7 +11,10 @@ export class PostsService {
     @InjectRepository(Post) private postsRepository: Repository<Post>
   ) {}
 
+  private readonly logger = new Logger(PostsService.name);
+
   async findAll() {
+    this.logger.log(`Get all posts`);
     const posts = await this.postsRepository.find({
       relations: ["author"],
     });
@@ -22,10 +25,12 @@ export class PostsService {
   }
 
   async findOne(id: string) {
+    this.logger.log(`Getting post by ID - ${id}`);
     return this.postsRepository.findOne({ id });
   }
 
   async create(postData: createPostDto, user: User) {
+    this.logger.log(`Creating new post - Line: ${postData.line}`);
     const newPost = await this.postsRepository.create({
       ...postData,
       author: user,
@@ -35,6 +40,7 @@ export class PostsService {
   }
 
   async delete(id: string, user: User) {
+    this.logger.log(`Deleting post - ${id}`);
     const post = await this.postsRepository.findOne(id, {
       relations: ["author"],
     });
@@ -43,6 +49,7 @@ export class PostsService {
       if (post) {
         return this.postsRepository.delete(id);
       } else {
+        this.logger.error(`Post does not exist - ${id}`);
         throw new HttpException("Post does not exist", HttpStatus.NOT_FOUND);
       }
     } else {
@@ -52,6 +59,7 @@ export class PostsService {
 
   async like(postId: string, user: User) {
     try {
+      this.logger.log(`Getting post by ID - ${postId}`);
       const post = await this.postsRepository.findOne({ id: postId });
       const { likes } = post;
       const index = likes.indexOf(user.id);
@@ -66,6 +74,7 @@ export class PostsService {
         }
       }
     } catch (err) {
+      this.logger.error(`Post does not exist - ${postId}`);
       throw new HttpException("Post does not exist", HttpStatus.NOT_FOUND);
     }
   }

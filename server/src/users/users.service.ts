@@ -4,10 +4,10 @@ import { Repository } from "typeorm";
 import User from "./entities/user.entity";
 import CreateUserDto from "./dto/createUser.dto";
 import * as bcrypt from "bcrypt";
-import PostgresErrorCode from "../../..//shared/database/postgresErrorCodes.enum";
+import PostgresErrorCode from "../shared/database/postgresErrorCodes.enum";
 import { FilesService } from "../files/files.service";
 import UpdateDto from "./dto/update.dto";
-import { PostsService } from "../posts/posts.service";
+import { PostsService } from "src/posts/posts.service";
 
 @Injectable()
 export class UsersService {
@@ -28,23 +28,27 @@ export class UsersService {
       return user;
     }
 
-    this.logger.error("User does not exist");
+    this.logger.error(`User does not exist - ${id}`);
     throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
   }
 
   async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
+    this.logger.log(`Getting user by ID - ${userId}`);
     const user = await this.getById(userId);
     if (user.avatar) {
+      this.logger.log(`Updating user - ${userId}`);
       await this.usersRepository.update(userId, {
         ...user,
         avatar: null,
       });
       await this.filesService.deletePublicFile(user.avatar.id);
     }
+
     const avatar = await this.filesService.uploadPublicFile(
       imageBuffer,
       filename
     );
+    this.logger.log(`Updating user - ${userId}`);
     await this.usersRepository.update(userId, {
       ...user,
       avatar,
@@ -53,6 +57,7 @@ export class UsersService {
   }
 
   async deleteAvatar(userId: string) {
+    this.logger.log(`Getting user by ID - ${userId}`);
     const user = await this.getById(userId);
     const fileId = user.avatar?.id;
     if (fileId) {
@@ -65,14 +70,17 @@ export class UsersService {
   }
 
   async getByEmail(email: string) {
+    this.logger.log(`Getting user by email - ${email}`);
     const user = await this.usersRepository.findOne({ email });
     if (user) {
       return user;
     }
+    this.logger.error(`User does not exist - ${email}`);
     throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
   }
 
   async create(userData: CreateUserDto) {
+    this.logger.log(`Creating new user - ${userData.email}`);
     const newUser = await this.usersRepository.create(userData);
     await this.usersRepository.save(newUser);
     return newUser;
@@ -83,15 +91,18 @@ export class UsersService {
       if (userData.password) {
         userData.password = await bcrypt.hash(userData.password, 10);
       }
+      this.logger.log(`Updating user - ${id}`);
       await this.usersRepository.update(id, userData);
     } catch (err) {
       if (err?.code === PostgresErrorCode.UniqueViolation) {
+        this.logger.error(`User already exists - ${id}`);
         throw new HttpException("User already exists", HttpStatus.BAD_REQUEST);
       }
     }
   }
 
   async findAll() {
+    this.logger.log(`Get all users`);
     return this.usersRepository.find();
   }
 
@@ -106,18 +117,22 @@ export class UsersService {
           await this.postsService.delete(post.id, userReq);
         });
 
+        this.logger.log(`Updating user - ${id}`);
         return this.usersRepository.delete(id);
       }
     } catch (err) {
+      this.logger.error(`User does not exist - ${id}`);
       throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
     }
   }
 
   async adminUpdate(id: string, userData: UpdateDto) {
     try {
+      this.logger.log(`Admin Update / updating user - ${id}`);
       await this.usersRepository.update(id, userData);
     } catch (err) {
       if (err?.code === PostgresErrorCode.UniqueViolation) {
+        this.logger.error(`Admin Update / User already exists - ${id}`);
         throw new HttpException("User already exists", HttpStatus.BAD_REQUEST);
       }
     }

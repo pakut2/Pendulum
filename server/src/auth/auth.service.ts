@@ -4,12 +4,13 @@ import {
   HttpStatus,
   Injectable,
   UseInterceptors,
+  Logger,
 } from "@nestjs/common";
 import { UsersService } from "../users/users.service";
 import RegisterDto from "./dto/register.dto";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
-import PostgresErrorCode from "../../../shared/database/postgresErrorCodes.enum";
+import PostgresErrorCode from "../shared/database/postgresErrorCodes.enum";
 
 @Injectable()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -18,6 +19,8 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService
   ) {}
+
+  private readonly logger = new Logger(AuthService.name);
 
   public async register(registrationData: RegisterDto) {
     const hashedPassword = await bcrypt.hash(registrationData.password, 10);
@@ -31,6 +34,7 @@ export class AuthService {
       return createdUser;
     } catch (err) {
       if (err?.code === PostgresErrorCode.UniqueViolation) {
+        this.logger.error(`User already exists - ${registrationData.email}`);
         throw new HttpException("User already exists", HttpStatus.BAD_REQUEST);
       }
 
@@ -47,6 +51,7 @@ export class AuthService {
       await this.verifyPassword(plainTextPassword, user.password);
       return user;
     } catch (err) {
+      this.logger.error(`Invalid Credentials`);
       throw new HttpException("Invalid Credentials", HttpStatus.BAD_REQUEST);
     }
   }
@@ -61,6 +66,7 @@ export class AuthService {
     );
 
     if (!isPasswordMatching) {
+      this.logger.error(`Invalid Credentials`);
       throw new HttpException("Invalid Credentials", HttpStatus.BAD_REQUEST);
     }
   }
