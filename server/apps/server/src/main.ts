@@ -5,7 +5,7 @@ import * as cookieParser from "cookie-parser";
 import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { config } from "aws-sdk";
-import { HttpExceptionFilter } from "./shared/filters/http-exception.filter";
+import { HttpExceptionFilter } from "../../shared/filters/http-exception.filter";
 declare const module: any;
 
 async function bootstrap() {

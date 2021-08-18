@@ -87,16 +87,14 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
   }, [dispatch, post, line, postId]);
 
   return (
-    <Fragment>
+    <FormContainer>
       {loading ? (
         <Loader />
       ) : error ? (
         <Message>{error}</Message>
       ) : (
-        <FormContainer>
-          {getLocationLoading ? (
-            <Loader />
-          ) : line ? (
+        <Fragment>
+          {line ? (
             <MapGL
               {...viewport}
               mapStyle="mapbox://styles/mapbox/dark-v10"
@@ -130,7 +128,9 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
                   onClose={setPopupInfo}
                 >
                   <div className="text-center">
+                    {/*@ts-ignore*/}
                     <h2 className="popup-text bold">{post.line}</h2>
+                    {/*@ts-ignore*/}
                     <p className="popup-text">{post.direction}</p>
                   </div>
                 </Popup>
@@ -139,9 +139,9 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
           ) : (
             <Message>Invalid Vehicle Code</Message>
           )}
-        </FormContainer>
+        </Fragment>
       )}
-    </Fragment>
+    </FormContainer>
   );
 };
 

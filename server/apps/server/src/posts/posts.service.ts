@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import User from "../users/entities/user.entity";
-import { Repository } from "typeorm";
+import { getRepository, Repository } from "typeorm";
 import createPostDto from "./dto/createPostDto.dto";
 import Post from "./entities/post.entity";
 
@@ -14,7 +14,7 @@ export class PostsService {
   private readonly logger = new Logger(PostsService.name);
 
   async findAll() {
-    this.logger.log(`Get all posts`);
+    this.logger.log(`Getting all posts`);
     const posts = await this.postsRepository.find({
       relations: ["author"],
     });

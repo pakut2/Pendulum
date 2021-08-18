@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 import { AuthModule } from "./auth/auth.module";
 import { PostsModule } from "./posts/posts.module";
 import { ConfigModule } from "@nestjs/config";
-import { DatabaseModule } from "./shared/database/database.module";
+import { DatabaseModule } from "../../shared/database/database.module";
 import { UsersModule } from "./users/users.module";
 import { FilesModule } from "./files/files.module";
-import configuration from "./shared/config/configuration";
+import configuration from "../../shared/config/configuration";
 
 @Module({
   imports: [

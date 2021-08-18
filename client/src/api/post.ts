@@ -22,6 +22,11 @@ export const listPosts =
     }
   };
 
+export const getAllPosts = async () => {
+  const { data } = await axios.get("/api/posts");
+  return data;
+};
+
 export const getPostDetails =
   (id: string) => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
     try {
@@ -40,6 +45,11 @@ export const getPostDetails =
       });
     }
   };
+
+export const getPostById = async (id: string) => {
+  const { data } = await axios.get(`/api/posts/${id}`);
+  return data;
+};
 
 interface PostData {
   line: string;

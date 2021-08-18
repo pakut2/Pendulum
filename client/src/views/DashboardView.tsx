@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import { Row, Col, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,13 +6,17 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import Post from "../components/Post";
-import { listPosts } from "../api/post";
+import { getAllPosts, listPosts } from "../api/post";
 import { postEnum } from "../store/enum/post.enum";
 import { authEnum } from "../store/enum/auth.enum";
 import { RootState } from "../store/interface/RootState.interface";
 import { ztmEnum } from "../store/enum/ztm.enum";
 
 const DashboardView = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.userLogin);
@@ -21,9 +25,9 @@ const DashboardView = () => {
     (state: RootState) => state.userRegister
   );
 
-  const { posts, loading, error } = useSelector(
-    (state: RootState) => state.postList
-  );
+  // const { posts, loading, error } = useSelector(
+  //   (state: RootState) => state.postList
+  // );
 
   const { success } = useSelector((state: RootState) => state.postCreate);
 
@@ -39,8 +43,41 @@ const DashboardView = () => {
 
   const { line } = useSelector((state: RootState) => state.getLocation);
 
+  // useEffect(() => {
+  //   dispatch(listPosts());
+
+  //   if (success) {
+  //     dispatch({ type: postEnum.POST_CREATE_RESET });
+  //   }
+  //   if (registerUser) {
+  //     dispatch({ type: authEnum.AUTH_REGISTER_RESET });
+  //   }
+  //   if (post) {
+  //     dispatch({ type: postEnum.POST_GET_DETAILS_RESET });
+  //   }
+  //   if (line) {
+  //     dispatch({ type: ztmEnum.ZTM_GET_LOCATION_RESET });
+  //   }
+  // }, [dispatch, success, successDelete, registerUser, successLike, line, post]);
+
   useEffect(() => {
-    dispatch(listPosts());
+    const getData = async () => {
+      setLoading(true);
+
+      try {
+        const data = await getAllPosts();
+        setPosts(data);
+      } catch (err) {
+        setError(
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message
+        );
+      }
+
+      setLoading(false);
+    };
+    getData();
 
     if (success) {
       dispatch({ type: postEnum.POST_CREATE_RESET });
@@ -54,7 +91,7 @@ const DashboardView = () => {
     if (line) {
       dispatch({ type: ztmEnum.ZTM_GET_LOCATION_RESET });
     }
-  }, [dispatch, success, successDelete, registerUser, successLike, line, post]);
+  }, [dispatch, success, successDelete, registerUser, successLike, line]);
 
   return (
     <Fragment>

@@ -5,8 +5,9 @@
   "scripts": {
     "db": "cd server && docker-compose up",
     "server": "cd server && nest start --watch",
+    "cron": "cd server && nest start cron --watch",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run cron\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
