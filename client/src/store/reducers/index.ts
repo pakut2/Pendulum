@@ -9,9 +9,7 @@ import {
   userAdminUpdateReducer,
 } from "./userReducers";
 import {
-  postListReducer,
   postGetDetailsReducer,
-  postCreateReducer,
   postDeleteReducer,
   postLikeReducer,
 } from "./postReducers";
@@ -26,9 +24,7 @@ export default combineReducers({
   userDelete: userDeleteReducer,
   userGetDetails: userGetDetailsReducer,
   userAdminUpdate: userAdminUpdateReducer,
-  postList: postListReducer,
   postGetDetails: postGetDetailsReducer,
-  postCreate: postCreateReducer,
   postDelete: postDeleteReducer,
   postLike: postLikeReducer,
   linesList: linesListReducer,

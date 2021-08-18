@@ -13,6 +13,7 @@ const Post = ({ post }: any) => {
 
   const formattedTime = DateTime.fromISO(post.createdAt);
   const diff = DateTime.now().diff(formattedTime, ["hours", "minutes"]);
+  const minutes = Math.round(diff.minutes);
 
   const deleteHandler = (id: string) => {
     if (window.confirm("Are you sure?")) {
@@ -108,7 +109,11 @@ const Post = ({ post }: any) => {
             )}
           </Col>
           <Col xs={4} sm={2}>
-            {Math.round(diff.minutes)} min. ago
+            {minutes === 60 || minutes === 0 ? (
+              <p>0 min. ago</p>
+            ) : (
+              <p>{minutes} min. ago</p>
+            )}
           </Col>
         </Row>
       </Card.Body>

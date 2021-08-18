@@ -3,26 +3,7 @@ import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { postEnum } from "../store/enum/post.enum";
 
-export const listPosts =
-  () => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
-    try {
-      dispatch({ type: postEnum.POST_LIST_REQUEST });
-
-      const { data } = await axios.get("/api/posts");
-
-      dispatch({ type: postEnum.POST_LIST_SUCCESS, payload: data });
-    } catch (err) {
-      dispatch({
-        type: postEnum.POST_LIST_FAIL,
-        payload:
-          err.response && err.response.data.message
-            ? err.response.data.message
-            : err.message,
-      });
-    }
-  };
-
-export const getAllPosts = async () => {
+export const listPosts = async () => {
   const { data } = await axios.get("/api/posts");
   return data;
 };
@@ -46,10 +27,10 @@ export const getPostDetails =
     }
   };
 
-export const getPostById = async (id: string) => {
-  const { data } = await axios.get(`/api/posts/${id}`);
-  return data;
-};
+// export const getPostDetails = async (id: string) => {
+//   const { data } = await axios.get(`/api/posts/${id}`);
+//   return data;
+// };
 
 interface PostData {
   line: string;
@@ -59,35 +40,25 @@ interface PostData {
   description?: string;
 }
 
-export const createPost =
-  ({ line, direction, closestStop, vehicleCode, description }: PostData) =>
-  async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
-    try {
-      dispatch({ type: postEnum.POST_CREATE_REQUEST });
-
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      await axios.post(
-        "/api/posts",
-        { line, direction, closestStop, vehicleCode, description },
-        config
-      );
-
-      dispatch({ type: postEnum.POST_CREATE_SUCCESS });
-    } catch (err) {
-      dispatch({
-        type: postEnum.POST_CREATE_FAIL,
-        payload:
-          err.response && err.response.data.message
-            ? err.response.data.message
-            : err.message,
-      });
-    }
+export const createPost = async ({
+  line,
+  direction,
+  closestStop,
+  vehicleCode,
+  description,
+}: PostData) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
+
+  await axios.post(
+    "/api/posts",
+    { line, direction, closestStop, vehicleCode, description },
+    config
+  );
+};
 
 export const deletePost =
   (id: string) => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
@@ -107,6 +78,10 @@ export const deletePost =
       });
     }
   };
+
+// export const deletePost = async (id: string) => {
+//   await axios.delete(`/api/posts/${id}`);
+// };
 
 export const likePost =
   (id: string) => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {

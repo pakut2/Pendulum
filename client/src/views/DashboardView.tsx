@@ -6,16 +6,20 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import Post from "../components/Post";
-import { getAllPosts, listPosts } from "../api/post";
+import { listPosts } from "../api/post";
 import { postEnum } from "../store/enum/post.enum";
 import { authEnum } from "../store/enum/auth.enum";
 import { RootState } from "../store/interface/RootState.interface";
 import { ztmEnum } from "../store/enum/ztm.enum";
+import { io } from "socket.io-client";
 
 const DashboardView = () => {
+  const socket = io("/");
+
+  const [newMessage, setNewMessage] = useState(false);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [postListError, setPostListError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
 
@@ -24,12 +28,6 @@ const DashboardView = () => {
   const { userInfo: registerUser } = useSelector(
     (state: RootState) => state.userRegister
   );
-
-  // const { posts, loading, error } = useSelector(
-  //   (state: RootState) => state.postList
-  // );
-
-  const { success } = useSelector((state: RootState) => state.postCreate);
 
   const { success: successDelete, error: errorDelete } = useSelector(
     (state: RootState) => state.postDelete
@@ -43,45 +41,27 @@ const DashboardView = () => {
 
   const { line } = useSelector((state: RootState) => state.getLocation);
 
-  // useEffect(() => {
-  //   dispatch(listPosts());
-
-  //   if (success) {
-  //     dispatch({ type: postEnum.POST_CREATE_RESET });
-  //   }
-  //   if (registerUser) {
-  //     dispatch({ type: authEnum.AUTH_REGISTER_RESET });
-  //   }
-  //   if (post) {
-  //     dispatch({ type: postEnum.POST_GET_DETAILS_RESET });
-  //   }
-  //   if (line) {
-  //     dispatch({ type: ztmEnum.ZTM_GET_LOCATION_RESET });
-  //   }
-  // }, [dispatch, success, successDelete, registerUser, successLike, line, post]);
-
   useEffect(() => {
+    setNewMessage(false);
+    socket.on("post", () => {
+      setNewMessage(true);
+    });
+
     const getData = async () => {
       setLoading(true);
-
       try {
-        const data = await getAllPosts();
+        const data = await listPosts();
         setPosts(data);
       } catch (err) {
-        setError(
+        setPostListError(
           err.response && err.response.data.message
             ? err.response.data.message
             : err.message
         );
       }
-
       setLoading(false);
     };
     getData();
-
-    if (success) {
-      dispatch({ type: postEnum.POST_CREATE_RESET });
-    }
     if (registerUser) {
       dispatch({ type: authEnum.AUTH_REGISTER_RESET });
     }
@@ -91,34 +71,33 @@ const DashboardView = () => {
     if (line) {
       dispatch({ type: ztmEnum.ZTM_GET_LOCATION_RESET });
     }
-  }, [dispatch, success, successDelete, registerUser, successLike, line]);
+  }, [dispatch, successDelete, registerUser, successLike, line, newMessage]);
 
   return (
     <Fragment>
-      {userInfo ? (
-        <Row className="justify-content-md-center text-center">
-          <Col md={6}>
+      <Row className="justify-content-md-center text-center">
+        <Col md={6}>
+          {userInfo ? (
             <Link className="btn btn-danger mb-3" to="/post">
               <i className="fa fa-bullhorn"></i> Report
             </Link>
-          </Col>
-        </Row>
-      ) : (
-        <Row className="justify-content-md-center text-center">
-          <Col md={6}>
+          ) : (
             <Message variant="secondary mb-3">
               Please <Link to="/login">Sign In</Link> to Report
             </Message>
-          </Col>
-        </Row>
-      )}
+          )}
+          {posts.length === 0 && (
+            <Message variant="primary">No Reports at the moment</Message>
+          )}
+        </Col>
+      </Row>
       <FormContainer mdSize={8}>
         {errorDelete && <Message>{errorDelete}</Message>}
         {errorLike && <Message>{errorLike}</Message>}
         {loading ? (
           <Loader />
-        ) : error ? (
-          <Message>{error}</Message>
+        ) : postListError ? (
+          <Message>{postListError}</Message>
         ) : (
           <Fragment>
             {posts.map((post: any) => (
