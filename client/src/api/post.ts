@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AnyAction } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import { io } from "socket.io-client";
 import { postEnum } from "../store/enum/post.enum";
 
 export const listPosts = async () => {
@@ -47,6 +48,8 @@ export const createPost = async ({
   vehicleCode,
   description,
 }: PostData) => {
+  const socket = io("/");
+
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -58,6 +61,8 @@ export const createPost = async ({
     { line, direction, closestStop, vehicleCode, description },
     config
   );
+
+  socket.emit("post", line);
 };
 
 export const deletePost =

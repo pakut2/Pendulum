@@ -17,9 +17,6 @@ const DashboardView = () => {
   const socket = io("/");
 
   const [newMessage, setNewMessage] = useState(false);
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [postListError, setPostListError] = useState<string | null>(null);
 
   const dispatch = useDispatch();
 
@@ -28,6 +25,12 @@ const DashboardView = () => {
   const { userInfo: registerUser } = useSelector(
     (state: RootState) => state.userRegister
   );
+
+  const { posts, loading, error } = useSelector(
+    (state: RootState) => state.postList
+  );
+
+  const { success } = useSelector((state: RootState) => state.postCreate);
 
   const { success: successDelete, error: errorDelete } = useSelector(
     (state: RootState) => state.postDelete
@@ -41,28 +44,36 @@ const DashboardView = () => {
 
   const { line } = useSelector((state: RootState) => state.getLocation);
 
+  const { success: successResend } = useSelector(
+    (state: RootState) => state.resendEmail
+  );
+
   useEffect(() => {
-    setNewMessage(false);
     socket.on("post", () => {
       setNewMessage(true);
     });
 
     const getData = async () => {
-      setLoading(true);
+      dispatch({ type: postEnum.POST_LIST_REQUEST });
       try {
         const data = await listPosts();
-        setPosts(data);
+        dispatch({ type: postEnum.POST_LIST_SUCCESS, payload: data });
       } catch (err) {
-        setPostListError(
-          err.response && err.response.data.message
-            ? err.response.data.message
-            : err.message
-        );
+        dispatch({
+          type: postEnum.POST_LIST_FAIL,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
       }
-      setLoading(false);
     };
     getData();
-    if (registerUser) {
+
+    if (success) {
+      dispatch({ type: postEnum.POST_CREATE_RESET });
+    }
+    if (userInfo && registerUser) {
       dispatch({ type: authEnum.AUTH_REGISTER_RESET });
     }
     if (post) {
@@ -71,7 +82,19 @@ const DashboardView = () => {
     if (line) {
       dispatch({ type: ztmEnum.ZTM_GET_LOCATION_RESET });
     }
-  }, [dispatch, successDelete, registerUser, successLike, line, newMessage]);
+    if (successResend) {
+      dispatch({ type: authEnum.AUTH_RESEND_RESET });
+    }
+  }, [
+    dispatch,
+    success,
+    successDelete,
+    registerUser,
+    successLike,
+    line,
+    newMessage,
+    successResend,
+  ]);
 
   return (
     <Fragment>
@@ -86,7 +109,7 @@ const DashboardView = () => {
               Please <Link to="/login">Sign In</Link> to Report
             </Message>
           )}
-          {posts.length === 0 && (
+          {posts.length === 0 && !loading && (
             <Message variant="primary">No Reports at the moment</Message>
           )}
         </Col>
@@ -96,8 +119,8 @@ const DashboardView = () => {
         {errorLike && <Message>{errorLike}</Message>}
         {loading ? (
           <Loader />
-        ) : postListError ? (
-          <Message>{postListError}</Message>
+        ) : error ? (
+          <Message>{error}</Message>
         ) : (
           <Fragment>
             {posts.map((post: any) => (

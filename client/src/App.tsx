@@ -12,6 +12,7 @@ import UserListView from "./views/UserListView";
 import CreatePostView from "./views/CreatePostView";
 import UserEditView from "./views/UserEditView";
 import MapView from "./views/MapView";
+import EmailConfirmationView from "./views/EmailConfirmationView";
 
 const App = () => {
   return (
@@ -26,6 +27,11 @@ const App = () => {
             <Route path="/dashboard" component={DashboardView} />
             <Route path="/post" component={CreatePostView} />
             <Route exact path="/map/:id" component={MapView} />
+            <Route
+              exact
+              path="/confirm-email/:token"
+              component={EmailConfirmationView}
+            />
             <Route path="/admin/userlist" component={UserListView} />
             <Route exact path="/admin/user/:id/edit" component={UserEditView} />
             <Route exact path="/" component={LandingView} />

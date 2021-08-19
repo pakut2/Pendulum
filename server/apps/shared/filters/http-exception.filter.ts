@@ -1,9 +1,4 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpStatus,
-} from "@nestjs/common";
+import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -11,12 +6,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest();
     const res = ctx.getResponse();
-
-    if (error.getStatus() === HttpStatus.INTERNAL_SERVER_ERROR) {
-      if (typeof error.response !== "string") {
-        error.response["message"] = "Something went wrong...";
-      }
-    }
 
     res.status(error.getStatus()).json({
       statusCode: error.getStatus(),

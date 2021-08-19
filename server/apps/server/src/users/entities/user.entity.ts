@@ -37,13 +37,12 @@ class User {
   @Column({ default: Role.User })
   public role?: Role;
 
+  @Column({ default: false })
+  public isEmailConfirmed: boolean;
+
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];
 
-  @CreateDateColumn({
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP(6)",
-  })
   public createdAt: Date;
 }
 

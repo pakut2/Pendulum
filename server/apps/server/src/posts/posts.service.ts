@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import User from "../users/entities/user.entity";
-import { getRepository, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import createPostDto from "./dto/createPostDto.dto";
 import Post from "./entities/post.entity";
 
@@ -77,5 +77,16 @@ export class PostsService {
       this.logger.error(`Post does not exist - ${postId}`);
       throw new HttpException("Post does not exist", HttpStatus.NOT_FOUND);
     }
+  }
+
+  async queryFind(query: string) {
+    this.logger.log(`Running query on posts table / Param - ${query}`);
+    const data = await this.postsRepository
+      .createQueryBuilder()
+      .select("Post")
+      .where("to_tsvector(Post.line) @@ to_tsquery(:query)", { query })
+      .getMany();
+
+    return data;
   }
 }

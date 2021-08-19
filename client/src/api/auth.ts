@@ -98,3 +98,57 @@ export const register =
       });
     }
   };
+
+export const sendConfirmationToken =
+  (token: string) =>
+  async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
+    try {
+      dispatch({
+        type: authEnum.AUTH_CONFIRM_REQUEST,
+      });
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      await axios.post("/api/email-confirmation/confirm", { token }, config);
+
+      dispatch({
+        type: authEnum.AUTH_CONFIRM_SUCCESS,
+      });
+    } catch (err) {
+      dispatch({
+        type: authEnum.AUTH_CONFIRM_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
+  };
+
+export const resendConfirmationEmail =
+  (id: string) => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
+    try {
+      dispatch({
+        type: authEnum.AUTH_RESEND_REQUEST,
+      });
+
+      await axios.post(
+        `/api/email-confirmation/resend-confirmation-link/${id}`
+      );
+
+      dispatch({
+        type: authEnum.AUTH_RESEND_SUCCESS,
+      });
+    } catch (err) {
+      dispatch({
+        type: authEnum.AUTH_RESEND_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
+  };

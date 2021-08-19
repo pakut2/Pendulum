@@ -113,11 +113,11 @@ export class UsersService {
       });
 
       if (user) {
-        user.posts.forEach(async (post) => {
+        await user.posts.forEach(async (post) => {
           await this.postsService.delete(post.id, userReq);
         });
 
-        this.logger.log(`Updating user - ${id}`);
+        this.logger.log(`Deleting user - ${id}`);
         return this.usersRepository.delete(id);
       }
     } catch (err) {
@@ -136,5 +136,14 @@ export class UsersService {
         throw new HttpException("User already exists", HttpStatus.BAD_REQUEST);
       }
     }
+  }
+
+  async markEmailAsConfirmed(email: string) {
+    return this.usersRepository.update(
+      { email },
+      {
+        isEmailConfirmed: true,
+      }
+    );
   }
 }

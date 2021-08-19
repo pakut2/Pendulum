@@ -13,5 +13,10 @@ export default () => ({
     AWS_ACCESS_KEY_ID: Joi.string().required(),
     AWS_SECRET_ACCESS_KEY: Joi.string().required(),
     AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
+    EMAIL_SERVICE: Joi.string().required(),
+    EMAIL_USER: Joi.string().required(),
+    EMAIL_PASSWORD: Joi.string().required(),
+    JWT_VERIFICATION_TOKEN_SECRET: Joi.string().required(),
+    EMAIL_CONFIRMATION_URL: Joi.string().required(),
   }),
 });

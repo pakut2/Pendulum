@@ -5,6 +5,18 @@ export interface RootState {
 
   authenticatedUser: { loading: boolean; error: string; user: Object | any };
 
+  emailConfirmation: {
+    loading: boolean;
+    success: boolean;
+    error: string;
+  };
+
+  resendEmail: {
+    loading: boolean;
+    success: boolean;
+    error: string;
+  };
+
   userGetDetails: {
     loading: boolean;
     error: string;

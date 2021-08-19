@@ -28,8 +28,12 @@ const RegisterView = () => {
   } = useSelector((state: RootState) => state.userRegister);
 
   useEffect(() => {
-    if (userInfo || user) {
+    if (userInfo) {
       history.push("/dashboard");
+    }
+
+    if (user) {
+      history.push("/login");
     }
   }, [history, userInfo, user]);
 

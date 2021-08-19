@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { login } from "../api/auth";
+import { login, resendConfirmationEmail } from "../api/auth";
 import { RootState } from "../store/interface/RootState.interface";
 
 const LoginView = () => {
@@ -20,6 +20,14 @@ const LoginView = () => {
     (state: RootState) => state.userLogin
   );
 
+  const { userInfo: user } = useSelector(
+    (state: RootState) => state.userRegister
+  );
+
+  const { success, error: errorResend } = useSelector(
+    (state: RootState) => state.resendEmail
+  );
+
   useEffect(() => {
     if (userInfo) {
       history.push("/dashboard");
@@ -31,10 +39,29 @@ const LoginView = () => {
     dispatch(login(email, password));
   };
 
+  const resendHandler = (id: string) => {
+    dispatch(resendConfirmationEmail(id));
+  };
+
   return (
     <FormContainer>
       <h1>Sign In</h1>
+      {success && <Message variant="primary">Email has been sent</Message>}
       {error && <Message>{error}</Message>}
+      {errorResend && <Message>{errorResend}</Message>}
+
+      {user && (
+        <Message variant="primary">
+          <span
+            style={{ cursor: "pointer", textDecoration: "underline" }}
+            onClick={() => {
+              resendHandler(user.id);
+            }}
+          >
+            Resend Email
+          </span>
+        </Message>
+      )}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
         <Form.Group className="py-1" controlId="email">

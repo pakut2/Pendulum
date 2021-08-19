@@ -1,62 +1,71 @@
 import React, { useEffect, useState, Fragment, SyntheticEvent } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Col, Container, Row, Form, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { listLines } from "../api/ztm";
 import { createPost } from "../api/post";
 import { RootState } from "../store/interface/RootState.interface";
-import { io } from "socket.io-client";
+import { ztmEnum } from "../store/enum/ztm.enum";
+import { postEnum } from "../store/enum/post.enum";
 
 const CreatePostView = () => {
-  const socket = io("/");
-
   const history = useHistory();
 
-  const [loading, setLoading] = useState(false);
-  const [lines, setLines] = useState<Array<Object>>([]);
-  const [linesError, setLinesError] = useState<null | string>(null);
-  const [postCreateError, setPostCreateError] = useState<null | string>(null);
-  const [successCreate, setSuccessCreate] = useState(false);
   const [lineNumber, setLineNumber] = useState("");
   const [direction, setDirection] = useState("");
   const [closestStop, setClosestStop] = useState("");
   const [vehicleCode, setVehicleCode] = useState<string | undefined>(undefined);
   const [description, setDescription] = useState<string | undefined>(undefined);
 
+  const dispatch = useDispatch();
+
   const { userInfo } = useSelector((state: RootState) => state.userLogin);
+
+  const { lines, loading, error } = useSelector(
+    (state: RootState) => state.linesList
+  );
+
+  const { success, error: postCreateError } = useSelector(
+    (state: RootState) => state.postCreate
+  );
 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     }
 
-    if (successCreate) {
+    if (success) {
       history.push("/dashboard");
     }
 
     const getData = async () => {
-      setLoading(true);
+      dispatch({ type: ztmEnum.ZTM_LIST_DETAILS_REQUEST });
       try {
         const data = await listLines();
-        setLines(data);
+        dispatch({
+          type: ztmEnum.ZTM_LIST_DETAILS_SUCCESS,
+          payload: data,
+        });
       } catch (err) {
-        setLinesError(
-          err.response && err.response.data.message
-            ? err.response.data.message
-            : err.message
-        );
+        dispatch({
+          type: ztmEnum.ZTM_LIST_DETAILS_FAIL,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
       }
-      setLoading(false);
     };
 
     getData();
-  }, [history, userInfo, successCreate]);
+  }, [history, userInfo, success]);
 
   const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();
-    setLoading(true);
+
+    dispatch({ type: postEnum.POST_CREATE_REQUEST });
     try {
       await createPost({
         line: lineNumber,
@@ -65,25 +74,24 @@ const CreatePostView = () => {
         vehicleCode,
         description,
       });
-
-      socket.emit("post", lineNumber);
-      setSuccessCreate(true);
+      dispatch({ type: postEnum.POST_CREATE_SUCCESS });
     } catch (err) {
-      setPostCreateError(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
+      dispatch({
+        type: postEnum.POST_CREATE_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
     }
-    setLoading(false);
   };
 
   return (
     <Container>
       {loading ? (
         <Loader />
-      ) : linesError ? (
-        <Message>{linesError}</Message>
+      ) : error ? (
+        <Message>{error}</Message>
       ) : (
         <Row className="justify-content-md-center py-3">
           <Col md={6}>

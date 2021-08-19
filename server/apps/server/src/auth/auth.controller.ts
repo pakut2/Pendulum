@@ -14,18 +14,28 @@ import RegisterDto from "./dto/register.dto";
 import { LocalAuthenticationGuard } from "./guards/local.guard";
 import RequestWithUser from "./interfaces/requestWithUser";
 import JwtAuthenticationGuard from "./guards/jwt.guard";
+import { EmailConfirmationService } from "../email-confirmation/email-confirmation.service";
+import { EmailConfirmationGuard } from "../email-confirmation/guards/email-confirmation.guard";
 
 @Controller("auth")
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly emailConfirmationService: EmailConfirmationService
+  ) {}
 
   @Post("register")
   async register(@Body() registrationData: RegisterDto) {
-    return this.authService.register(registrationData);
+    const user = await this.authService.register(registrationData);
+    await this.emailConfirmationService.sendVerificationLink(
+      registrationData.email
+    );
+    return user;
   }
 
   @HttpCode(200)
+  @UseGuards(EmailConfirmationGuard)
   @UseGuards(LocalAuthenticationGuard)
   @Post("login")
   async login(@Req() request: RequestWithUser) {
