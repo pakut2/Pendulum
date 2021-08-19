@@ -12,6 +12,7 @@ import { authEnum } from "../store/enum/auth.enum";
 import { RootState } from "../store/interface/RootState.interface";
 import { ztmEnum } from "../store/enum/ztm.enum";
 import { io } from "socket.io-client";
+import { mailEnum } from "../store/enum/mail.enum";
 
 const DashboardView = () => {
   const socket = io("/");
@@ -83,7 +84,7 @@ const DashboardView = () => {
       dispatch({ type: ztmEnum.ZTM_GET_LOCATION_RESET });
     }
     if (successResend) {
-      dispatch({ type: authEnum.AUTH_RESEND_RESET });
+      dispatch({ type: mailEnum.MAIL_RESEND_RESET });
     }
   }, [
     dispatch,

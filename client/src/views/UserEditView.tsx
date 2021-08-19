@@ -35,22 +35,40 @@ const UserEditView = ({ match }: RouteComponentProps<MatchParams>) => {
   } = useSelector((state: RootState) => state.userAdminUpdate);
 
   useEffect(() => {
-    if (success) {
-      dispatch({ type: userEnum.USER_ADMIN_UPDATE_RESET });
-      history.push("/admin/userList");
-    } else {
-      if (!user || user.id !== userId) {
-        dispatch(getUserDetails(userId));
+    const getData = async () => {
+      if (success) {
+        dispatch({ type: userEnum.USER_ADMIN_UPDATE_RESET });
+        history.push("/admin/userlist");
       } else {
-        setName(user.name);
-        setEmail(user.email);
-        if (user.role === "admin") {
-          setRole(true);
+        if (!user || user.id !== userId) {
+          dispatch({ type: userEnum.USER_DETAILS_REQUEST });
+          try {
+            const data = await getUserDetails(userId);
+            dispatch({
+              type: userEnum.USER_DETAILS_SUCCESS,
+              payload: data,
+            });
+          } catch (err) {
+            dispatch({
+              type: userEnum.USER_DETAILS_FAIL,
+              payload:
+                err.response && err.response.data.message
+                  ? err.response.data.message
+                  : err.message,
+            });
+          }
         } else {
-          setRole(false);
+          setName(user.name);
+          setEmail(user.email);
+          if (user.role === "admin") {
+            setRole(true);
+          } else {
+            setRole(false);
+          }
         }
       }
-    }
+    };
+    getData();
   }, [user, userId, dispatch, history, success]);
 
   const submitHandler = (e: SyntheticEvent) => {

@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Message from "../components/Message";
 import { RootState } from "../store/interface/RootState.interface";
-import { sendConfirmationToken } from "../api/auth";
+import { sendConfirmationToken } from "../api/mail";
+import { mailEnum } from "../store/enum/mail.enum";
 
 interface MatchParams {
   token: string;
@@ -27,8 +28,24 @@ const EmailConfirmationView = ({ match }: RouteComponentProps<MatchParams>) => {
     }
   }, [history, success]);
 
-  const clickHandler = () => {
-    dispatch(sendConfirmationToken(token));
+  const clickHandler = async () => {
+    dispatch({
+      type: mailEnum.MAIL_CONFIRM_REQUEST,
+    });
+    try {
+      await sendConfirmationToken(token);
+      dispatch({
+        type: mailEnum.MAIL_CONFIRM_SUCCESS,
+      });
+    } catch (err) {
+      dispatch({
+        type: mailEnum.MAIL_CONFIRM_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
   };
 
   return (

@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAuthenticatedUser, updateUser } from "../api/user";
 import { userEnum } from "../store/enum/user.enum";
 import { RootState } from "../store/interface/RootState.interface";
+import { authEnum } from "../store/enum/auth.enum";
 
 const ProfileView = () => {
   const history = useHistory();
@@ -47,35 +48,78 @@ const ProfileView = () => {
   } = useSelector((state: RootState) => state.userUpdate);
 
   useEffect(() => {
-    if (!userInfo) {
-      history.push("/login");
-    } else {
-      if (!user || success) {
-        dispatch({
-          type: userEnum.USER_UPDATE_RESET,
-        });
-        dispatch(getAuthenticatedUser());
+    const getData = async () => {
+      if (!userInfo) {
+        history.push("/login");
       } else {
-        setName(user.name);
-        setEmail(user.email);
-        if (user.avatar) {
-          setImage(user.avatar.url);
+        if (!user || success) {
+          dispatch({
+            type: userEnum.USER_UPDATE_RESET,
+          });
+
+          dispatch({ type: userEnum.USER_GET_AUTH_REQUEST });
+
+          try {
+            const data = await getAuthenticatedUser();
+            dispatch({ type: userEnum.USER_GET_AUTH_SUCCESS, payload: data });
+          } catch (err) {
+            dispatch({
+              type: userEnum.USER_GET_AUTH_FAIL,
+              payload:
+                err.response && err.response.data.message
+                  ? err.response.data.message
+                  : err.message,
+            });
+
+            dispatch({ type: authEnum.AUTH_LOGOUT });
+            localStorage.removeItem("userInfo");
+          }
         } else {
-          setImage(
-            "http://www.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=200&r=pg&d=mm"
-          );
+          setName(user.name);
+          setEmail(user.email);
+          if (user.avatar) {
+            setImage(user.avatar.url);
+          } else {
+            setImage(
+              "http://www.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=200&r=pg&d=mm"
+            );
+          }
         }
       }
-    }
+    };
+    getData();
   }, [userInfo, history, user, dispatch, success]);
 
-  const submitHandler = (e: SyntheticEvent) => {
+  const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
-      dispatch(updateUser(userInfo.id, { name, email, password }));
+      dispatch({ type: userEnum.USER_UPDATE_REQUEST });
+      try {
+        const data = await updateUser(userInfo.id, { name, email, password });
+
+        dispatch({
+          type: userEnum.USER_UPDATE_SUCCESS,
+          payload: data,
+        });
+
+        dispatch({
+          type: authEnum.AUTH_LOGIN_SUCCESS,
+          payload: data,
+        });
+
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (err) {
+        dispatch({
+          type: userEnum.USER_UPDATE_FAIL,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
+      }
     }
   };
 

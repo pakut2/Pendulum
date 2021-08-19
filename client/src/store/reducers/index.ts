@@ -1,10 +1,5 @@
 import { combineReducers } from "redux";
-import {
-  userLoginReducer,
-  userRegisterReducer,
-  emailConfirmationReducer,
-  resendEmailReducer,
-} from "./authReducers";
+import { userLoginReducer, userRegisterReducer } from "./authReducers";
 import {
   getAuthenticatedUserReducer,
   updateUserReducer,
@@ -21,12 +16,11 @@ import {
   postLikeReducer,
 } from "./postReducers";
 import { linesListReducer, getLocationReducer } from "./ztmReducers";
+import { emailConfirmationReducer, resendEmailReducer } from "./mailReducers";
 
 export default combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-  emailConfirmation: emailConfirmationReducer,
-  resendEmail: resendEmailReducer,
   authenticatedUser: getAuthenticatedUserReducer,
   userUpdate: updateUserReducer,
   userList: userListReducer,
@@ -40,4 +34,6 @@ export default combineReducers({
   postLike: postLikeReducer,
   linesList: linesListReducer,
   getLocation: getLocationReducer,
+  emailConfirmation: emailConfirmationReducer,
+  resendEmail: resendEmailReducer,
 });

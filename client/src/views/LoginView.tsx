@@ -5,8 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
-import { login, resendConfirmationEmail } from "../api/auth";
+import { login } from "../api/auth";
+import { resendConfirmationEmail } from "../api/mail";
 import { RootState } from "../store/interface/RootState.interface";
+import { authEnum } from "../store/enum/auth.enum";
+import { mailEnum } from "../store/enum/mail.enum";
 
 const LoginView = () => {
   const history = useHistory();
@@ -34,13 +37,44 @@ const LoginView = () => {
     }
   }, [history, userInfo]);
 
-  const submitHandler = (e: SyntheticEvent) => {
+  const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(login(email, password));
+    dispatch({ type: authEnum.AUTH_LOGIN_REQUEST });
+    try {
+      const data = await login(email, password);
+      dispatch({
+        type: authEnum.AUTH_LOGIN_SUCCESS,
+        payload: data,
+      });
+    } catch (err) {
+      dispatch({
+        type: authEnum.AUTH_LOGIN_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
   };
 
-  const resendHandler = (id: string) => {
-    dispatch(resendConfirmationEmail(id));
+  const resendHandler = async (id: string) => {
+    dispatch({
+      type: mailEnum.MAIL_RESEND_REQUEST,
+    });
+    try {
+      await resendConfirmationEmail(id);
+      dispatch({
+        type: mailEnum.MAIL_RESEND_SUCCESS,
+      });
+    } catch (err) {
+      dispatch({
+        type: mailEnum.MAIL_RESEND_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
   };
 
   return (
@@ -49,16 +83,19 @@ const LoginView = () => {
       {success && <Message variant="primary">Email has been sent</Message>}
       {error && <Message>{error}</Message>}
       {errorResend && <Message>{errorResend}</Message>}
-
       {user && (
         <Message variant="primary">
           <span
-            style={{ cursor: "pointer", textDecoration: "underline" }}
+            style={{ cursor: "pointer" }}
             onClick={() => {
               resendHandler(user.id);
             }}
           >
-            Resend Email
+            Confirmation Email sent to{" "}
+            <strong style={{ textDecoration: "underline" }}>
+              {user.email}
+            </strong>
+            . Click to resend email
           </span>
         </Message>
       )}

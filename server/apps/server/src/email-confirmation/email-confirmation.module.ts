@@ -17,7 +17,7 @@ import { UsersModule } from "../users/users.module";
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get("JWT_VERIFICATION_TOKEN_SECRET"),
         signOptions: {
-          expiresIn: "21600",
+          expiresIn: "216000",
         },
       }),
     }),

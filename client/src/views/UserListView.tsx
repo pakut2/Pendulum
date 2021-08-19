@@ -27,20 +27,52 @@ const UserListView = () => {
   const { user } = useSelector((state: RootState) => state.userGetDetails);
 
   useEffect(() => {
-    if (userInfo && userInfo.role === "admin") {
-      dispatch(listUsers());
-    } else {
-      history.push("/login");
-    }
+    const getData = async () => {
+      if (userInfo && userInfo.role === "admin") {
+        dispatch({ type: userEnum.USER_LIST_REQUEST });
+        try {
+          const data = await listUsers();
+          dispatch({
+            type: userEnum.USER_LIST_SUCCESS,
+            payload: data,
+          });
+        } catch (err) {
+          dispatch({
+            type: userEnum.USER_LIST_FAIL,
+            payload:
+              err.response && err.response.data.message
+                ? err.response.data.message
+                : err.message,
+          });
+        }
+      } else {
+        history.push("/login");
+      }
 
-    if (user) {
-      dispatch({ type: userEnum.USER_DETAILS_RESET });
-    }
+      if (user) {
+        dispatch({ type: userEnum.USER_DETAILS_RESET });
+      }
+    };
+    getData();
   }, [dispatch, history, userInfo, successDelete, user]);
 
-  const deleteHandler = (id: string) => {
+  const deleteHandler = async (id: string) => {
     if (window.confirm("Are you sure?")) {
-      dispatch(deleteUser(id));
+      dispatch({ type: userEnum.USER_DELETE_REQUEST });
+      try {
+        await deleteUser(id);
+        dispatch({
+          type: userEnum.USER_DELETE_SUCCESS,
+        });
+      } catch (err) {
+        dispatch({
+          type: userEnum.USER_DELETE_FAIL,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
+      }
     }
   };
 

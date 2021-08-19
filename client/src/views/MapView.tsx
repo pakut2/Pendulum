@@ -13,7 +13,9 @@ import MapGL, {
   Popup,
 } from "react-map-gl";
 import { getPostDetails } from "../api/post";
-import { getLocation, getLocationInterval } from "../api/ztm";
+import { getLocation } from "../api/ztm";
+import { postEnum } from "../store/enum/post.enum";
+import { ztmEnum } from "../store/enum/ztm.enum";
 
 interface MatchParams {
   id: string;
@@ -51,34 +53,66 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
     (state: RootState) => state.postGetDetails
   );
 
-  const { line, loading: getLocationLoading } = useSelector(
-    (state: RootState) => state.getLocation
-  );
+  const {
+    line,
+    loading: getLocationLoading,
+    error: getLocationError,
+  } = useSelector((state: RootState) => state.getLocation);
 
   useEffect(() => {
-    if (!post) {
-      dispatch(getPostDetails(postId));
-    } else {
-      if (!line) {
-        dispatch(getLocation(post.vehicleCode));
+    const getData = async () => {
+      if (!post) {
+        dispatch({ type: postEnum.POST_GET_DETAILS_REQUEST });
+        try {
+          const data = await getPostDetails(postId);
+          dispatch({ type: postEnum.POST_GET_DETAILS_SUCCESS, payload: data });
+        } catch (err) {
+          dispatch({
+            type: postEnum.POST_GET_DETAILS_FAIL,
+            payload:
+              err.response && err.response.data.message
+                ? err.response.data.message
+                : err.message,
+          });
+        }
       } else {
-        setLat(line.Lat);
-        setLon(line.Lon);
+        if (!line) {
+          dispatch({ type: ztmEnum.ZTM_GET_LOCATION_REQUEST });
+          try {
+            const data = await getLocation(post.vehicleCode);
+            dispatch({
+              type: ztmEnum.ZTM_GET_LOCATION_SUCCESS,
+              payload: data,
+            });
+          } catch (err) {
+            dispatch({
+              type: ztmEnum.ZTM_GET_LOCATION_FAIL,
+              payload:
+                err.response && err.response.data.message
+                  ? err.response.data.message
+                  : err.message,
+            });
+          }
+        } else {
+          setLat(line.Lat);
+          setLon(line.Lon);
 
-        setViewport({
-          height: "75vh",
-          width: "100%",
-          latitude: line.Lat,
-          longitude: line.Lon,
-          zoom: 13,
-        });
+          setViewport({
+            height: "75vh",
+            width: "100%",
+            latitude: line.Lat,
+            longitude: line.Lon,
+            zoom: 13,
+          });
+        }
       }
-    }
+    };
+    getData();
 
     if (line) {
       setInterval(async () => {
         // @ts-ignore
-        const { Lat, Lon } = await getLocationInterval(post.vehicleCode);
+        const { Lat, Lon } = await getLocation(post.vehicleCode);
 
         setLat(Lat);
         setLon(Lon);
@@ -88,10 +122,12 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
 
   return (
     <FormContainer>
-      {loading ? (
+      {loading || getLocationLoading ? (
         <Loader />
       ) : error ? (
         <Message>{error}</Message>
+      ) : getLocationError ? (
+        <Message>{getLocationError}</Message>
       ) : (
         <Fragment>
           {line ? (

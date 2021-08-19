@@ -1,7 +1,4 @@
 import axios from "axios";
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
-import { ztmEnum } from "../store/enum/ztm.enum";
 
 export const listLines = async () => {
   let { data } = await axios.get(
@@ -21,40 +18,7 @@ export const listLines = async () => {
   return validData;
 };
 
-export const getLocation =
-  (vehicleCode: string) =>
-  async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
-    try {
-      dispatch({ type: ztmEnum.ZTM_GET_LOCATION_REQUEST });
-
-      const { data } = await axios.get(
-        "https://ckan2.multimediagdansk.pl/gpsPositions"
-      );
-
-      let validData;
-
-      data.Vehicles.forEach((line: any) => {
-        if (vehicleCode === line.VehicleCode) {
-          validData = line;
-        }
-      });
-
-      dispatch({
-        type: ztmEnum.ZTM_GET_LOCATION_SUCCESS,
-        payload: validData,
-      });
-    } catch (err) {
-      dispatch({
-        type: ztmEnum.ZTM_GET_LOCATION_FAIL,
-        payload:
-          err.response && err.response.data.message
-            ? err.response.data.message
-            : err.message,
-      });
-    }
-  };
-
-export const getLocationInterval = async (vehicleCode: string) => {
+export const getLocation = async (vehicleCode: string) => {
   const { data } = await axios.get(
     "https://ckan2.multimediagdansk.pl/gpsPositions"
   );

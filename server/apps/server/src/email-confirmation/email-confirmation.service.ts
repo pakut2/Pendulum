@@ -17,7 +17,7 @@ export class EmailConfirmationService {
     const payload = { email };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get("JWT_VERIFICATION_TOKEN_SECRET"),
-      expiresIn: "21600",
+      expiresIn: "216000",
     });
 
     const url = `${this.configService.get("EMAIL_CONFIRMATION_URL")}/${token}`;

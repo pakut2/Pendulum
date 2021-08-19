@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deletePost, likePost } from "../api/post";
 import { RootState } from "../store/interface/RootState.interface";
 import { DateTime } from "luxon";
+import { postEnum } from "../store/enum/post.enum";
 
 const Post = ({ post }: any) => {
   const dispatch = useDispatch();
@@ -15,14 +16,38 @@ const Post = ({ post }: any) => {
   const diff = DateTime.now().diff(formattedTime, ["hours", "minutes"]);
   const minutes = Math.round(diff.minutes);
 
-  const deleteHandler = (id: string) => {
+  const deleteHandler = async (id: string) => {
     if (window.confirm("Are you sure?")) {
-      dispatch(deletePost(id));
+      dispatch({ type: postEnum.POST_DELETE_REQUEST });
+      try {
+        await deletePost(id);
+        dispatch({ type: postEnum.POST_DELETE_SUCCESS });
+      } catch (err) {
+        dispatch({
+          type: postEnum.POST_DELETE_FAIL,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
+      }
     }
   };
 
-  const likeHandler = (id: string) => {
-    dispatch(likePost(id));
+  const likeHandler = async (id: string) => {
+    dispatch({ type: postEnum.POST_LIKE_REQUEST });
+    try {
+      await likePost(id);
+      dispatch({ type: postEnum.POST_LIKE_SUCCESS });
+    } catch (err) {
+      dispatch({
+        type: postEnum.POST_LIKE_FAIL,
+        payload:
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message,
+      });
+    }
   };
 
   return (

@@ -34,35 +34,3 @@ export const userRegisterReducer = (state = {}, action: PayloadAction) => {
       return state;
   }
 };
-
-export const emailConfirmationReducer = (state = {}, action: PayloadAction) => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case authEnum.AUTH_CONFIRM_REQUEST:
-      return { loading: true };
-    case authEnum.AUTH_CONFIRM_SUCCESS:
-      return { loading: false, success: true };
-    case authEnum.AUTH_CONFIRM_FAIL:
-      return { loading: false, error: payload };
-    default:
-      return state;
-  }
-};
-
-export const resendEmailReducer = (state = {}, action: PayloadAction) => {
-  const { type, payload } = action;
-
-  switch (type) {
-    case authEnum.AUTH_RESEND_REQUEST:
-      return { loading: true };
-    case authEnum.AUTH_RESEND_SUCCESS:
-      return { loading: false, success: true };
-    case authEnum.AUTH_RESEND_FAIL:
-      return { loading: false, error: payload };
-    case authEnum.AUTH_RESEND_RESET:
-      return {};
-    default:
-      return state;
-  }
-};

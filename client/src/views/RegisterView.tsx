@@ -7,6 +7,7 @@ import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import { register } from "../api/auth";
 import { RootState } from "../store/interface/RootState.interface";
+import { authEnum } from "../store/enum/auth.enum";
 
 const RegisterView = () => {
   const history = useHistory();
@@ -37,13 +38,30 @@ const RegisterView = () => {
     }
   }, [history, userInfo, user]);
 
-  const submitHandler = (e: SyntheticEvent) => {
+  const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
-      dispatch(register(name, email, password));
+      dispatch({
+        type: authEnum.AUTH_REGISTER_REQUEST,
+      });
+      try {
+        const data = await register(name, email, password);
+        dispatch({
+          type: authEnum.AUTH_REGISTER_SUCCESS,
+          payload: data,
+        });
+      } catch (err) {
+        dispatch({
+          type: authEnum.AUTH_REGISTER_FAIL,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
+      }
     }
   };
 
