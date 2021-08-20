@@ -13,6 +13,7 @@ import { RootState } from "../store/interface/RootState.interface";
 import { ztmEnum } from "../store/enum/ztm.enum";
 import { io } from "socket.io-client";
 import { mailEnum } from "../store/enum/mail.enum";
+import Chat from "../components/Chat";
 
 const DashboardView = () => {
   const socket = io("/");
@@ -132,6 +133,7 @@ const DashboardView = () => {
           </Fragment>
         )}
       </FormContainer>
+      {userInfo && <Chat id={userInfo.id} />}
     </Fragment>
   );
 };

@@ -46,6 +46,7 @@ const LoginView = () => {
         type: authEnum.AUTH_LOGIN_SUCCESS,
         payload: data,
       });
+      localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (err) {
       dispatch({
         type: authEnum.AUTH_LOGIN_FAIL,
