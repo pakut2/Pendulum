@@ -60,7 +60,7 @@ const CreatePostView = () => {
     };
 
     getData();
-  }, [history, userInfo, success]);
+  }, [history, userInfo, success, dispatch]);
 
   const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();

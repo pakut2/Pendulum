@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -13,6 +13,7 @@ import CreatePostView from "./views/CreatePostView";
 import UserEditView from "./views/UserEditView";
 import MapView from "./views/MapView";
 import EmailConfirmationView from "./views/EmailConfirmationView";
+import NotFoundView from "./views/NotFoundView";
 
 const App = () => {
   return (
@@ -34,6 +35,8 @@ const App = () => {
             />
             <Route path="/admin/userlist" component={UserListView} />
             <Route exact path="/admin/user/:id/edit" component={UserEditView} />
+            <Route path="/notfound" component={NotFoundView} />
+            <Redirect from="*" to="/notfound" />
             <Route exact path="/" component={LandingView} />
           </Container>
         </main>

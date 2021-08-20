@@ -27,9 +27,11 @@ const LoginView = () => {
     (state: RootState) => state.userRegister
   );
 
-  const { success, error: errorResend } = useSelector(
-    (state: RootState) => state.resendEmail
-  );
+  const {
+    success,
+    loading: loadingResend,
+    error: errorResend,
+  } = useSelector((state: RootState) => state.resendEmail);
 
   useEffect(() => {
     if (userInfo) {
@@ -81,6 +83,7 @@ const LoginView = () => {
   return (
     <FormContainer>
       <h1>Sign In</h1>
+      {loadingResend && <Loader />}
       {success && <Message variant="primary">Email has been sent</Message>}
       {error && <Message>{error}</Message>}
       {errorResend && <Message>{errorResend}</Message>}

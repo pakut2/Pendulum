@@ -6,6 +6,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FormContainer from "../components/FormContainer";
 import Post from "../components/Post";
+import Chat from "../components/Chat";
 import { listPosts } from "../api/post";
 import { postEnum } from "../store/enum/post.enum";
 import { authEnum } from "../store/enum/auth.enum";
@@ -13,7 +14,6 @@ import { RootState } from "../store/interface/RootState.interface";
 import { ztmEnum } from "../store/enum/ztm.enum";
 import { io } from "socket.io-client";
 import { mailEnum } from "../store/enum/mail.enum";
-import Chat from "../components/Chat";
 
 const DashboardView = () => {
   const socket = io("/");
@@ -96,6 +96,8 @@ const DashboardView = () => {
     line,
     newMessage,
     successResend,
+    post,
+    userInfo,
   ]);
 
   return (
