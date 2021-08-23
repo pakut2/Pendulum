@@ -21,8 +21,8 @@ export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
   async getById(id: string) {
-    const user = await this.usersRepository.findOne({ id });
     this.logger.log(`Getting user by ID - ${id}`);
+    const user = await this.usersRepository.findOne({ id });
 
     if (user) {
       return user;
@@ -102,8 +102,15 @@ export class UsersService {
   }
 
   async findAll() {
-    this.logger.log(`Get all users`);
-    return this.usersRepository.find();
+    this.logger.log(`Getting all users`);
+    const users = await this.usersRepository.find();
+
+    if (users) {
+      return users;
+    }
+
+    this.logger.error(`No users found`);
+    throw new HttpException("No users found", HttpStatus.NOT_FOUND);
   }
 
   async delete(id: string, userReq: User) {

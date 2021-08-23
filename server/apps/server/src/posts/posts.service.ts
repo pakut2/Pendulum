@@ -26,7 +26,14 @@ export class PostsService {
 
   async findOne(id: string) {
     this.logger.log(`Getting post by ID - ${id}`);
-    return this.postsRepository.findOne({ id });
+    const post = await this.postsRepository.findOne({ id });
+
+    if (post) {
+      return post;
+    }
+
+    this.logger.error(`Post does not exist - ${id}`);
+    throw new HttpException("Post does not exist", HttpStatus.NOT_FOUND);
   }
 
   async create(postData: createPostDto, user: User) {
@@ -40,13 +47,14 @@ export class PostsService {
   }
 
   async delete(id: string, user: User) {
-    this.logger.log(`Deleting post - ${id}`);
+    this.logger.log(`Getting post by ID - ${id}`);
     const post = await this.postsRepository.findOne(id, {
       relations: ["author"],
     });
 
     if (post.author.id === user.id || user.role === "admin") {
       if (post) {
+        this.logger.log(`Deleting post - ${id}`);
         return this.postsRepository.delete(id);
       } else {
         this.logger.error(`Post does not exist - ${id}`);
@@ -79,14 +87,14 @@ export class PostsService {
     }
   }
 
-  async queryFind(query: string) {
-    this.logger.log(`Running query on posts table / Param - ${query}`);
-    const data = await this.postsRepository
-      .createQueryBuilder()
-      .select("Post")
-      .where("to_tsvector(Post.line) @@ to_tsquery(:query)", { query })
-      .getMany();
+  // async queryFind(query: string) {
+  //   this.logger.log(`Running query on posts table / Param - ${query}`);
+  //   const data = await this.postsRepository
+  //     .createQueryBuilder()
+  //     .select("Post")
+  //     .where("to_tsvector(Post.line) @@ to_tsquery(:query)", { query })
+  //     .getMany();
 
-    return data;
-  }
+  //   return data;
+  // }
 }

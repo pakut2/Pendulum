@@ -103,6 +103,21 @@
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "dto",
+      "interfaces",
+      "guards",
+      "entities",
+      "strategies",
+      ".module.ts",
+      "mocks",
+      ".stub.ts",
+      "main.ts",
+      "decorators",
+      "gateways",
+      "shared",
+      ".e2e"
+    ],
     "roots": [
       "<rootDir>/apps/"
     ]

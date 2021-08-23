@@ -42,8 +42,6 @@ class User {
 
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];
-
-  public createdAt: Date;
 }
 
 export default User;
