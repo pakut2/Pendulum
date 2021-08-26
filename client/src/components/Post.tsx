@@ -81,6 +81,7 @@ const Post = ({ post }: any) => {
             {userInfo && userInfo.id === post.author.id && (
               <Button
                 className="btn btn-danger"
+                data-testid="delete-btn"
                 onClick={() => {
                   deleteHandler(post.id);
                 }}
@@ -94,6 +95,7 @@ const Post = ({ post }: any) => {
               userInfo.id !== post.author.id && (
                 <Button
                   className="btn btn-danger"
+                  data-testid="delete-btn-admin"
                   onClick={() => {
                     deleteHandler(post.id);
                   }}
@@ -121,6 +123,7 @@ const Post = ({ post }: any) => {
             {userInfo ? (
               <Card.Text
                 className="btn btn-secondary mx-3"
+                data-testid="like-btn"
                 onClick={() => {
                   likeHandler(post.id);
                 }}

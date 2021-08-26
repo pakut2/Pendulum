@@ -124,30 +124,27 @@ const ProfileView = () => {
   };
 
   const uploadHandler = async (e: any) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("image", file);
-    setUploading(true);
-
-    try {
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-
-      const { data } = await axios.post(
-        "http://localhost:5000/api/users/upload",
-        formData,
-        config
-      );
-
-      setImage(data);
-      setUploading(false);
-    } catch (err) {
-      console.error(err);
-      setUploading(false);
-    }
+    // const file = e.target.files[0];
+    // const formData = new FormData();
+    // formData.append("image", file);
+    // setUploading(true);
+    // try {
+    //   const config = {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   };
+    //   const { data } = await axios.post(
+    //     "http://localhost:5000/api/users/upload",
+    //     formData,
+    //     config
+    //   );
+    //   setImage(data);
+    //   setUploading(false);
+    // } catch (err) {
+    //   console.error(err);
+    //   setUploading(false);
+    // }
   };
 
   return (

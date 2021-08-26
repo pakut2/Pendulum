@@ -129,7 +129,12 @@ const LoginView = () => {
             }}
           />
         </Form.Group>
-        <Button type="submit" variant="primary" className="my-1">
+        <Button
+          type="submit"
+          variant="primary"
+          className="my-1"
+          data-testid="sign-in"
+        >
           Sign In
         </Button>
       </Form>

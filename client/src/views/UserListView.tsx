@@ -122,7 +122,8 @@ const UserListView = () => {
                   </LinkContainer>
                   <Button
                     variant="danger"
-                    className="btn-sm "
+                    className="btn-sm"
+                    data-testid="delete-btn"
                     onClick={() => {
                       deleteHandler(user.id);
                     }}
