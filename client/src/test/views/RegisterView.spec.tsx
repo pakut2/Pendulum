@@ -125,7 +125,7 @@ describe("RegisterView", () => {
   });
 
   describe("on form submit", () => {
-    it("should dispatch register type", () => {
+    it("should register a new user", () => {
       render(
         <Provider store={storeMock}>
           <BrowserRouter>

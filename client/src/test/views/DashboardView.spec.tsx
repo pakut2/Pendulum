@@ -70,8 +70,8 @@ describe("DashboardView", () => {
     );
   });
 
-  describe("when states have value", () => {
-    it("should dispatch certain types", () => {
+  describe("when certain states have value", () => {
+    it("should clear those states", () => {
       render(
         <Provider store={storeMock}>
           <Router>

@@ -43,8 +43,8 @@ describe("Post", () => {
     );
   });
 
-  describe("on delete button click", () => {
-    it("should dispatch type when user is the author", async () => {
+  describe("when delete button is clicked", () => {
+    it("should delete the post if user is the author", async () => {
       window.confirm = jest.fn(() => true);
 
       render(
@@ -64,7 +64,7 @@ describe("Post", () => {
       });
     });
 
-    it("should dispatch type when user is admin", async () => {
+    it("should delete the post if user is admin", async () => {
       window.confirm = jest.fn(() => true);
 
       storeMock = mockStore({
@@ -99,21 +99,23 @@ describe("Post", () => {
     });
   });
 
-  it("should dispatch when like button is clicked", async () => {
-    render(
-      <Provider store={storeMock}>
-        <Router>
-          <Post {...componentPropsMock} />
-        </Router>
-      </Provider>
-    );
+  describe("when like button is clicked", () => {
+    it("should like the post", async () => {
+      render(
+        <Provider store={storeMock}>
+          <Router>
+            <Post {...componentPropsMock} />
+          </Router>
+        </Provider>
+      );
 
-    expect(screen.getByTestId("like-btn")).toBeInTheDocument();
+      expect(screen.getByTestId("like-btn")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByTestId("like-btn"));
+      fireEvent.click(screen.getByTestId("like-btn"));
 
-    await expect(storeMock.getActions()).toContainEqual({
-      type: postEnum.POST_LIKE_REQUEST,
+      await expect(storeMock.getActions()).toContainEqual({
+        type: postEnum.POST_LIKE_REQUEST,
+      });
     });
   });
 });

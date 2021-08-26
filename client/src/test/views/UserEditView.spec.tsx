@@ -85,7 +85,7 @@ describe("UserEditView", () => {
   });
 
   describe("on form submit", () => {
-    it("should dispatch admin update type", () => {
+    it("should update the user if current user is admin", () => {
       render(
         <Provider store={storeMock}>
           <BrowserRouter>

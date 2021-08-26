@@ -50,7 +50,7 @@ describe("CreatePostView", () => {
   });
 
   describe("on form submit", () => {
-    it("should dispatch type", async () => {
+    it("should create a new post", async () => {
       render(
         <Provider store={storeMock}>
           <BrowserRouter>

@@ -88,7 +88,7 @@ describe("LoginView", () => {
   });
 
   describe("on form submit", () => {
-    it("should dispatch login type", () => {
+    it("should login user", () => {
       render(
         <Provider store={storeMock}>
           <BrowserRouter>

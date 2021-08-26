@@ -56,8 +56,8 @@ describe("EmailConfirmationView", () => {
     });
   });
 
-  describe("when button is clicked", () => {
-    it("should dispatch confirm email type", () => {
+  describe("when confirmation button is clicked", () => {
+    it("should confirm email", () => {
       render(
         <Provider store={storeMock}>
           <BrowserRouter>

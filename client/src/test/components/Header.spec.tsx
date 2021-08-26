@@ -55,7 +55,7 @@ describe("Header", () => {
   });
 
   describe("when logout is clicked", () => {
-    it("should dispatch type: AUTH_LOGOUT", async () => {
+    it("should logout the user", async () => {
       render(
         <Provider store={storeMock}>
           <Router>
