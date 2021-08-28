@@ -76,4 +76,22 @@ export interface RootState {
     error: string;
     line: Object | any;
   };
+
+  fileSignedUrl: {
+    loading: boolean;
+    error: string;
+    url: Object | any;
+  };
+
+  fileS3Post: {
+    loading: boolean;
+    error: string;
+    success: boolean;
+  };
+
+  fileAvatarUpdate: {
+    loading: boolean;
+    error: string;
+    success: boolean;
+  };
 }

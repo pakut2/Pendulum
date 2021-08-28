@@ -23,6 +23,7 @@ import { Role } from "./entities/role.enum";
 import { UsersService } from "./users.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
+import { KeyDto } from "./dto/awsKey.dto";
 
 @Controller("users")
 @UseInterceptors(ClassSerializerInterceptor)
@@ -40,17 +41,22 @@ export class UsersController {
     return this.usersService.getById(id);
   }
 
+  // @Post("upload")
+  // @UseInterceptors(FileInterceptor("file"))
+  // async addAvatar(
+  //   @Req() request: RequestWithUser,
+  //   @UploadedFile() file: Express.Multer.File
+  // ) {
+  //   return this.usersService.addAvatar(
+  //     request.user.id,
+  //     file.buffer,
+  //     file.originalname
+  //   );
+  // }
+
   @Post("upload")
-  @UseInterceptors(FileInterceptor("file"))
-  async addAvatar(
-    @Req() request: RequestWithUser,
-    @UploadedFile() file: Express.Multer.File
-  ) {
-    return this.usersService.addAvatar(
-      request.user.id,
-      file.buffer,
-      file.originalname
-    );
+  async addAvatar(@Req() request: RequestWithUser, @Body() keyDto: KeyDto) {
+    return this.usersService.addAvatar(request.user.id, keyDto.key);
   }
 
   @Put(":id")

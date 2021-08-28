@@ -32,9 +32,35 @@ export class UsersService {
     throw new HttpException("User does not exist", HttpStatus.NOT_FOUND);
   }
 
-  async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
+  // async addAvatar(userId: string, imageBuffer: Buffer, filename: string) {
+  //   this.logger.log(`Getting user by ID - ${userId}`);
+  //   const user = await this.getById(userId);
+
+  //   if (user.avatar) {
+  //     this.logger.log(`Updating user - ${userId}`);
+  //     await this.usersRepository.update(userId, {
+  //       ...user,
+  //       avatar: null,
+  //     });
+  //     await this.filesService.deletePublicFile(user.avatar.id);
+  //   }
+
+  //   const avatar = await this.filesService.uploadPublicFile(
+  //     imageBuffer,
+  //     filename
+  //   );
+  //   this.logger.log(`Updating user - ${userId}`);
+  //   await this.usersRepository.update(userId, {
+  //     ...user,
+  //     avatar,
+  //   });
+  //   return avatar;
+  // }
+
+  async addAvatar(userId: string, key: string) {
     this.logger.log(`Getting user by ID - ${userId}`);
     const user = await this.getById(userId);
+
     if (user.avatar) {
       this.logger.log(`Updating user - ${userId}`);
       await this.usersRepository.update(userId, {
@@ -44,16 +70,17 @@ export class UsersService {
       await this.filesService.deletePublicFile(user.avatar.id);
     }
 
-    const avatar = await this.filesService.uploadPublicFile(
-      imageBuffer,
-      filename
-    );
+    const avatar = await this.filesService.updateFilesRepository(key);
+
     this.logger.log(`Updating user - ${userId}`);
+
     await this.usersRepository.update(userId, {
       ...user,
       avatar,
     });
-    return avatar;
+
+    const updatedUser = await this.getById(userId);
+    return updatedUser;
   }
 
   async deleteAvatar(userId: string) {

@@ -17,6 +17,11 @@ import {
 } from "./postReducers";
 import { linesListReducer, getLocationReducer } from "./ztmReducers";
 import { emailConfirmationReducer, resendEmailReducer } from "./mailReducers";
+import {
+  fileSignedUrlReducer,
+  fileS3PostReducer,
+  fileAvatarUpdateReducer,
+} from "./fileReducers";
 
 export default combineReducers({
   userLogin: userLoginReducer,
@@ -36,4 +41,7 @@ export default combineReducers({
   getLocation: getLocationReducer,
   emailConfirmation: emailConfirmationReducer,
   resendEmail: resendEmailReducer,
+  fileSignedUrl: fileSignedUrlReducer,
+  fileS3Post: fileS3PostReducer,
+  fileAvatarUpdate: fileAvatarUpdateReducer,
 });

@@ -18,6 +18,8 @@ import { getAuthenticatedUser, updateUser } from "../api/user";
 import { userEnum } from "../store/enum/user.enum";
 import { RootState } from "../store/interface/RootState.interface";
 import { authEnum } from "../store/enum/auth.enum";
+import { fileEnum } from "../store/enum/file.enum";
+import { getSignedUrl, updateAvatar } from "../api/file";
 
 const ProfileView = () => {
   const history = useHistory();
@@ -32,6 +34,7 @@ const ProfileView = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [displayInputs, toggleInputs] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [fileError, setFileError] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -47,15 +50,28 @@ const ProfileView = () => {
     success,
   } = useSelector((state: RootState) => state.userUpdate);
 
+  const { error: getSignedUrlError } = useSelector(
+    (state: RootState) => state.fileSignedUrl
+  );
+
+  const { error: s3PostError } = useSelector(
+    (state: RootState) => state.fileS3Post
+  );
+
+  const { success: avatarUpdateSuccess, error: avatarUpdateError } =
+    useSelector((state: RootState) => state.fileAvatarUpdate);
+
   useEffect(() => {
     const getData = async () => {
       if (!userInfo) {
         history.push("/login");
       } else {
-        if (!user || success) {
+        if (!user || success || avatarUpdateSuccess) {
           dispatch({
             type: userEnum.USER_UPDATE_RESET,
           });
+
+          dispatch({ type: fileEnum.FILE_AVATAR_UPDATE_RESET });
 
           dispatch({ type: userEnum.USER_GET_AUTH_REQUEST });
 
@@ -80,15 +96,13 @@ const ProfileView = () => {
           if (user.avatar) {
             setImage(user.avatar.url);
           } else {
-            setImage(
-              "http://www.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=200&r=pg&d=mm"
-            );
+            setImage(`https://robohash.org/${user.id}`);
           }
         }
       }
     };
     getData();
-  }, [userInfo, history, user, dispatch, success]);
+  }, [userInfo, history, user, dispatch, success, avatarUpdateSuccess]);
 
   const submitHandler = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -124,27 +138,78 @@ const ProfileView = () => {
   };
 
   const uploadHandler = async (e: any) => {
-    // const file = e.target.files[0];
-    // const formData = new FormData();
-    // formData.append("image", file);
-    // setUploading(true);
-    // try {
-    //   const config = {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   };
-    //   const { data } = await axios.post(
-    //     "http://localhost:5000/api/users/upload",
-    //     formData,
-    //     config
-    //   );
-    //   setImage(data);
-    //   setUploading(false);
-    // } catch (err) {
-    //   console.error(err);
-    //   setUploading(false);
-    // }
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    console.log(file);
+
+    if (
+      file.size <= 10485760 &&
+      (file.type === "image/png" ||
+        file.type === "image/jpg" ||
+        file.type === "image/jpeg")
+    ) {
+      setUploading(true);
+      try {
+        const url = await getSignedUrl(file.name);
+        dispatch({ type: fileEnum.FILE_URL_SUCCESS, payload: url.data });
+
+        dispatch({ type: fileEnum.FILE_POST_REQUEST });
+        try {
+          const config = {
+            headers: {
+              "Content-Type": "application/x-binary",
+            },
+          };
+
+          await axios.put(url.data.presignedURL, file, config);
+          dispatch({ type: fileEnum.FILE_POST_SUCCESS });
+
+          dispatch({ type: fileEnum.FILE_AVATAR_UPDATE_REQUEST });
+          try {
+            const user = await updateAvatar(url.data.key);
+            dispatch({
+              type: fileEnum.FILE_AVATAR_UPDATE_SUCCESS,
+              payload: user.data,
+            });
+
+            dispatch({
+              type: authEnum.AUTH_LOGIN_SUCCESS,
+              payload: user.data,
+            });
+
+            localStorage.setItem("userInfo", JSON.stringify(user.data));
+          } catch (err) {
+            dispatch({
+              type: fileEnum.FILE_AVATAR_UPDATE_FAIL,
+              payload:
+                err.response && err.response.data.message
+                  ? err.response.data.message
+                  : err.message,
+            });
+          }
+        } catch (err) {
+          dispatch({
+            type: fileEnum.FILE_POST_FAIL,
+            payload:
+              err.response && err.response.data.message
+                ? err.response.data.message
+                : err.message,
+          });
+        }
+      } catch (err) {
+        dispatch({
+          type: fileEnum.FILE_URL_FAIL,
+          payload:
+            err.response && err.response.data.message
+              ? err.response.data.message
+              : err.message,
+        });
+      }
+      setUploading(false);
+    } else {
+      setFileError(true);
+    }
   };
 
   return (
@@ -189,7 +254,16 @@ const ProfileView = () => {
         <Row className="justify-content-md-center py-3">
           <Col md={3}>
             {userUpdateError && <Message>{userUpdateError}</Message>}
+            {getSignedUrlError && <Message>{getSignedUrlError}</Message>}
+            {s3PostError && <Message>{s3PostError}</Message>}
+            {avatarUpdateError && <Message>{avatarUpdateError}</Message>}
+            {fileError && (
+              <Message>
+                File name must end with .png, .jpg or .jpeg, and be below 10mb
+              </Message>
+            )}
             {userUpdateLoading && <Loader />}
+            {uploading && <Loader />}
             {message && <Message>{message}</Message>}
             {success && <Message variant="success">Profile Updated</Message>}
             <Form onSubmit={submitHandler}>
@@ -244,7 +318,6 @@ const ProfileView = () => {
                   custom
                   onChange={uploadHandler}
                 ></Form.File>
-                {uploading && <Loader />}
               </Form.Group>
               <Button type="submit" variant="primary" className="my-1">
                 Update

@@ -59,14 +59,21 @@ const Post = ({ post }: any) => {
               src={
                 post.author.avatar
                   ? post.author.avatar.url
-                  : "http://www.gravatar.com/avatar/6a6c19fea4a3676970167ce51f39e6ee?s=200&r=pg&d=mm"
+                  : `https://robohash.org/${post.author.id}`
               }
               alt=""
               width="30"
               height="30"
               roundedCircle
+              style={{ display: "inline-block" }}
+              className="mt-1"
             />{" "}
-            {post.author.name}
+            <span
+              style={{ display: "inline-block", verticalAlign: "middle" }}
+              className="mt-1"
+            >
+              {post.author.name}
+            </span>
           </Col>
 
           {post.vehicleCode && (
