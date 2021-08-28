@@ -21,8 +21,6 @@ import RequestWithUser from "../auth/interfaces/requestWithUser";
 import UpdateDto from "./dto/update.dto";
 import { Role } from "./entities/role.enum";
 import { UsersService } from "./users.service";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { Express } from "express";
 import { KeyDto } from "./dto/awsKey.dto";
 
 @Controller("users")
@@ -40,19 +38,6 @@ export class UsersController {
   async getUserById(@Param("id") id: string) {
     return this.usersService.getById(id);
   }
-
-  // @Post("upload")
-  // @UseInterceptors(FileInterceptor("file"))
-  // async addAvatar(
-  //   @Req() request: RequestWithUser,
-  //   @UploadedFile() file: Express.Multer.File
-  // ) {
-  //   return this.usersService.addAvatar(
-  //     request.user.id,
-  //     file.buffer,
-  //     file.originalname
-  //   );
-  // }
 
   @Post("upload")
   async addAvatar(@Req() request: RequestWithUser, @Body() keyDto: KeyDto) {

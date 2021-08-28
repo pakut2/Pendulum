@@ -45,26 +45,6 @@ export class FilesService {
     return newFile;
   }
 
-  // async uploadPublicFile(dataBuffer: Buffer, filename: string) {
-  //   this.logger.log(`Uploading avatar - ${filename}`);
-  //   const s3 = new S3();
-  //   const uploadResult = await s3
-  //     .upload({
-  //       Bucket: this.configService.get("AWS_PUBLIC_BUCKET_NAME"),
-  //       Body: dataBuffer,
-  //       Key: `avatars/${uuid()}-${filename}`,
-  //     })
-  //     .promise();
-
-  //   const newFile = this.publicFilesRepository.create({
-  //     key: uploadResult.Key,
-  //     url: uploadResult.Location,
-  //   });
-
-  //   await this.publicFilesRepository.save(newFile);
-  //   return newFile;
-  // }
-
   async deletePublicFile(fileId: string) {
     this.logger.log(`Deleting avatar - ${fileId}`);
     const file = await this.publicFilesRepository.findOne({ id: fileId });
