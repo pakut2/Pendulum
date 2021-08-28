@@ -141,7 +141,6 @@ const ProfileView = () => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    console.log(file);
 
     if (
       file.size <= 10485760 &&
