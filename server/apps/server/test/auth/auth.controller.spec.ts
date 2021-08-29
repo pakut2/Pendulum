@@ -4,16 +4,16 @@ import { JwtService } from "@nestjs/jwt";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import { PostsService } from "../../../server/src/posts/posts.service";
 import configuration from "../../../shared/config/configuration";
-import User from "../../../server/src/users/entities/user.entity";
+import { User } from "../../../server/src/users/entities/user.entity";
 import { UsersService } from "../../../server/src/users/users.service";
 import { AuthService } from "../../src/auth/auth.service";
 import mockedJwtService from "../utils/mocks/mockedJwtService";
 import { authServiceStub } from "./auth.service.spec.stub";
 import { ConfigModule } from "@nestjs/config";
 import { FilesService } from "../../../server/src/files/files.service";
-import PublicFile from "../../../server/src/files/entities/publicFile.entity";
+import { PublicFile } from "../../../server/src/files/entities/publicFile.entity";
 import { EmailConfirmationService } from "../../../server/src/email-confirmation/email-confirmation.service";
-import Post from "../../../server/src/posts/entities/post.entity";
+import { Post } from "../../../server/src/posts/entities/post.entity";
 import { EmailService } from "../../../server/src/email/email.service";
 
 describe("AuthController", () => {

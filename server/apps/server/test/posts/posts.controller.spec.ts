@@ -4,7 +4,7 @@ import configuration from "../../../shared/config/configuration";
 import { ConfigModule } from "@nestjs/config";
 import { PostsService } from "../../../server/src/posts/posts.service";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import Post from "../../../server/src/posts/entities/post.entity";
+import { Post } from "../../../server/src/posts/entities/post.entity";
 
 describe("PostsController", () => {
   let controller: PostsController;

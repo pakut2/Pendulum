@@ -1,8 +1,8 @@
 import { ConfigModule } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import User from "../../../server/src/users/entities/user.entity";
-import Post from "../../../server/src/posts/entities/post.entity";
+import { User } from "../../../server/src/users/entities/user.entity";
+import { Post } from "../../../server/src/posts/entities/post.entity";
 import configuration from "../../../shared/config/configuration";
 import { PostsService } from "../../src/posts/posts.service";
 

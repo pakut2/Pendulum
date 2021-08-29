@@ -8,9 +8,9 @@ import { UsersService } from "../../../server/src/users/users.service";
 import configuration from "../../../shared/config/configuration";
 import { EmailConfirmationService } from "../../src/email-confirmation/email-confirmation.service";
 import mockedJwtService from "../utils/mocks/mockedJwtService";
-import User from "../../../server/src/users/entities/user.entity";
-import PublicFile from "../../../server/src/files/entities/publicFile.entity";
-import Post from "../../../server/src/posts/entities/post.entity";
+import { User } from "../../../server/src/users/entities/user.entity";
+import { PublicFile } from "../../../server/src/files/entities/publicFile.entity";
+import { Post } from "../../../server/src/posts/entities/post.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
 describe("EmailConfirmationService", () => {

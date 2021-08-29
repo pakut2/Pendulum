@@ -2,14 +2,13 @@ import { ConfigModule } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
 import configuration from "../../../shared/config/configuration";
-import PublicFile from "../../../server/src/files/entities/publicFile.entity";
+import { PublicFile } from "../../../server/src/files/entities/publicFile.entity";
 import { FilesService } from "../../../server/src/files/files.service";
 import { PostsService } from "../../../server/src/posts/posts.service";
-import User from "../../../server/src/users/entities/user.entity";
+import { User } from "../../../server/src/users/entities/user.entity";
 import { UsersService } from "../../../server/src/users/users.service";
 import { UsersController } from "../../src/users/users.controller";
-import Post from "../../../server/src/posts/entities/post.entity";
-import RequestWithUser from "../../../server/src/auth/interfaces/requestWithUser";
+import { Post } from "../../../server/src/posts/entities/post.entity";
 
 describe("UsersController", () => {
   let controller: UsersController;

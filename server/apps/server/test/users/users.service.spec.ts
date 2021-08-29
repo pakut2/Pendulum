@@ -3,11 +3,11 @@ import { Test, TestingModule } from "@nestjs/testing";
 import configuration from "../../..//shared/config/configuration";
 import { UsersService } from "../../src/users/users.service";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import Post from "../../../server/src/posts/entities/post.entity";
+import { Post } from "../../../server/src/posts/entities/post.entity";
 import { FilesService } from "../../../server/src/files/files.service";
 import { PostsService } from "../../../server/src/posts/posts.service";
-import User from "../../../server/src/users/entities/user.entity";
-import PublicFile from "../../../server/src/files/entities/publicFile.entity";
+import { User } from "../../../server/src/users/entities/user.entity";
+import { PublicFile } from "../../../server/src/files/entities/publicFile.entity";
 
 describe("UsersService", () => {
   let service: UsersService;
