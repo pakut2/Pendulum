@@ -26,5 +26,3 @@ export class UpdateDto {
   @IsNotEmpty()
   role?: any;
 }
-
-export default UpdateDto;

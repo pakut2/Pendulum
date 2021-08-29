@@ -16,9 +16,9 @@ import {
 } from "@nestjs/common";
 import { Roles } from "../auth/decorators/roles.decorator";
 import { RolesGuard } from "../auth/guards/roles.guard";
-import JwtAuthenticationGuard from "../auth/guards/jwt.guard";
-import RequestWithUser from "../auth/interfaces/requestWithUser";
-import UpdateDto from "./dto/update.dto";
+import { JwtAuthenticationGuard } from "../auth/guards/jwt.guard";
+import { RequestWithUser } from "../auth/interfaces/requestWithUser";
+import { UpdateDto } from "./dto/update.dto";
 import { Role } from "./entities/role.enum";
 import { UsersService } from "./users.service";
 import { KeyDto } from "./dto/awsKey.dto";

@@ -3,7 +3,7 @@ import { SchedulerRegistry } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CronJob } from "cron";
 import { Repository } from "typeorm";
-import Post from "../../server/src/posts/entities/post.entity";
+import { Post } from "../../server/src/posts/entities/post.entity";
 import { DateTime } from "luxon";
 
 @Injectable()

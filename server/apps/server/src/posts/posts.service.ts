@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import User from "../users/entities/user.entity";
+import { User } from "../users/entities/user.entity";
 import { Repository } from "typeorm";
-import createPostDto from "./dto/createPostDto.dto";
-import Post from "./entities/post.entity";
+import { createPostDto } from "./dto/createPostDto.dto";
+import { Post } from "./entities/post.entity";
 
 @Injectable()
 export class PostsService {

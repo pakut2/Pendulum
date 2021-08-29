@@ -7,10 +7,10 @@ import {
   Logger,
 } from "@nestjs/common";
 import { UsersService } from "../users/users.service";
-import RegisterDto from "./dto/register.dto";
+import { RegisterDto } from "./dto/register.dto";
 import * as bcrypt from "bcrypt";
 import { JwtService } from "@nestjs/jwt";
-import PostgresErrorCode from "../../../shared/database/postgresErrorCodes.enum";
+import { PostgresErrorCode } from "../../../shared/database/postgresErrorCodes.enum";
 
 @Injectable()
 @UseInterceptors(ClassSerializerInterceptor)

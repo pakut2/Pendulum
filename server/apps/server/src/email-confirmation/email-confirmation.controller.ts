@@ -10,8 +10,6 @@ import {
 } from "@nestjs/common";
 import { ConfirmEmailDto } from "./dto/confirmEmail.dto";
 import { EmailConfirmationService } from "./email-confirmation.service";
-import JwtAuthenticationGuard from "../auth/guards/jwt.guard";
-import RequestWithUser from "../auth/interfaces/requestWithUser";
 
 @Controller("email-confirmation")
 @UseInterceptors(ClassSerializerInterceptor)

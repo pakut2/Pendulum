@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import PublicFile from "../../server/src/files/entities/publicFile.entity";
-import Post from "../../server/src/posts/entities/post.entity";
-import User from "../../server/src/users/entities/user.entity";
+import { PublicFile } from "../../server/src/files/entities/publicFile.entity";
+import { Post } from "../../server/src/posts/entities/post.entity";
+import { User } from "../../server/src/users/entities/user.entity";
 
 @Module({
   imports: [

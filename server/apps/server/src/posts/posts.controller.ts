@@ -11,9 +11,9 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import RequestWithUser from "../auth/interfaces/requestWithUser";
-import JwtAuthenticationGuard from "../auth/guards/jwt.guard";
-import createPostDto from "./dto/createPostDto.dto";
+import { RequestWithUser } from "../auth/interfaces/requestWithUser";
+import { JwtAuthenticationGuard } from "../auth/guards/jwt.guard";
+import { createPostDto } from "./dto/createPostDto.dto";
 import { PostsService } from "./posts.service";
 
 @Controller("posts")

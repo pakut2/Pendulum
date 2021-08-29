@@ -23,5 +23,3 @@ export class createPostDto {
   @IsString()
   description?: string;
 }
-
-export default createPostDto;

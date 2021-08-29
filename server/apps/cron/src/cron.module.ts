@@ -3,7 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import configuration from "../../shared/config/configuration";
-import Post from "../../server/src/posts/entities/post.entity";
+import { Post } from "../../server/src/posts/entities/post.entity";
 import { DatabaseModule } from "../../shared/database/database.module";
 import { CronService } from "./cron.service";
 

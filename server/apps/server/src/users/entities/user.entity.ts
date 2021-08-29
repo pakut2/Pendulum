@@ -7,13 +7,13 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import PublicFile from "../../files/entities/publicFile.entity";
+import { PublicFile } from "../../files/entities/publicFile.entity";
 import { Exclude } from "class-transformer";
 import { Role } from "./role.enum";
-import Post from "../../posts/entities/post.entity";
+import { Post } from "../../posts/entities/post.entity";
 
 @Entity()
-class User {
+export class User {
   @PrimaryGeneratedColumn("uuid")
   public id?: string;
 
@@ -43,5 +43,3 @@ class User {
   @OneToMany(() => Post, (post: Post) => post.author)
   public posts: Post[];
 }
-
-export default User;

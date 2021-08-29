@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import User from "./entities/user.entity";
-import CreateUserDto from "./dto/createUser.dto";
+import { User } from "./entities/user.entity";
+import { CreateUserDto } from "./dto/createUser.dto";
 import * as bcrypt from "bcrypt";
-import PostgresErrorCode from "../../../shared/database/postgresErrorCodes.enum";
+import { PostgresErrorCode } from "../../../shared/database/postgresErrorCodes.enum";
 import { FilesService } from "../files/files.service";
-import UpdateDto from "./dto/update.dto";
+import { UpdateDto } from "./dto/update.dto";
 import { PostsService } from "../posts/posts.service";
 
 @Injectable()

@@ -1,4 +1,4 @@
-import User from "../../users/entities/user.entity";
+import { User } from "../../users/entities/user.entity";
 import {
   Column,
   CreateDateColumn,
@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 
 @Entity()
-class Post {
+export class Post {
   @PrimaryGeneratedColumn("uuid")
   public id?: string;
 
@@ -39,5 +39,3 @@ class Post {
   })
   public createdAt: Date;
 }
-
-export default Post;

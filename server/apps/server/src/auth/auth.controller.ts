@@ -10,10 +10,10 @@ import {
   ClassSerializerInterceptor,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import RegisterDto from "./dto/register.dto";
+import { RegisterDto } from "./dto/register.dto";
 import { LocalAuthenticationGuard } from "./guards/local.guard";
-import RequestWithUser from "./interfaces/requestWithUser";
-import JwtAuthenticationGuard from "./guards/jwt.guard";
+import { RequestWithUser } from "./interfaces/requestWithUser";
+import { JwtAuthenticationGuard } from "./guards/jwt.guard";
 import { EmailConfirmationService } from "../email-confirmation/email-confirmation.service";
 import { EmailConfirmationGuard } from "../email-confirmation/guards/email-confirmation.guard";
 
