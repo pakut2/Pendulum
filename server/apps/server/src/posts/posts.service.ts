@@ -15,11 +15,14 @@ export class PostsService {
 
   async findAll() {
     this.logger.log(`Getting all posts`);
-    const posts = await this.postsRepository.find({
-      relations: ["author"],
-    });
 
-    posts.sort((a, b) => (a.likes.length < b.likes.length ? 1 : -1));
+    const posts = await this.postsRepository
+      .createQueryBuilder()
+      .select("Post")
+      .orderBy("Post.likes", "DESC")
+      .leftJoinAndSelect("Post.author", "author")
+      .leftJoinAndSelect("author.avatar", "avatar")
+      .getMany();
 
     return posts;
   }
