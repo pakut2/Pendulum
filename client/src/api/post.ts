@@ -1,5 +1,4 @@
 import axios from "axios";
-import { io } from "socket.io-client";
 
 export const listPosts = async () => {
   const { data } = await axios.get("/api/posts");
@@ -26,21 +25,20 @@ export const createPost = async ({
   vehicleCode,
   description,
 }: PostData) => {
-  const socket = io("/");
-
   const config = {
     headers: {
       "Content-Type": "application/json",
     },
   };
 
-  await axios.post(
+  const { data } = await axios.post(
     "/api/posts",
     { line, direction, closestStop, vehicleCode, description },
     config
   );
 
-  socket.emit("post", line);
+  const populatedPost = await getPostDetails(data.id);
+  return populatedPost;
 };
 
 export const deletePost = async (id: string) => {

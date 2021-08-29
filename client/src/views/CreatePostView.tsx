@@ -67,14 +67,14 @@ const CreatePostView = () => {
 
     dispatch({ type: postEnum.POST_CREATE_REQUEST });
     try {
-      await createPost({
+      const post = await createPost({
         line: lineNumber,
         direction,
         closestStop,
         vehicleCode,
         description,
       });
-      dispatch({ type: postEnum.POST_CREATE_SUCCESS });
+      dispatch({ type: postEnum.POST_CREATE_SUCCESS, payload: post });
     } catch (err) {
       dispatch({
         type: postEnum.POST_CREATE_FAIL,

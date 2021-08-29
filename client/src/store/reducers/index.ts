@@ -14,6 +14,7 @@ import {
   postCreateReducer,
   postDeleteReducer,
   postLikeReducer,
+  postsFromSocketReducer,
 } from "./postReducers";
 import { linesListReducer, getLocationReducer } from "./ztmReducers";
 import { emailConfirmationReducer, resendEmailReducer } from "./mailReducers";
@@ -37,6 +38,7 @@ export default combineReducers({
   postCreate: postCreateReducer,
   postDelete: postDeleteReducer,
   postLike: postLikeReducer,
+  postsFromSocket: postsFromSocketReducer,
   linesList: linesListReducer,
   getLocation: getLocationReducer,
   emailConfirmation: emailConfirmationReducer,

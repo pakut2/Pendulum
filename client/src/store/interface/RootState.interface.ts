@@ -60,6 +60,7 @@ export interface RootState {
   postCreate: {
     success: boolean;
     error: string;
+    post: Object | any;
   };
 
   postDelete: {
@@ -93,5 +94,9 @@ export interface RootState {
     loading: boolean;
     error: string;
     success: boolean;
+  };
+
+  postsFromSocket: {
+    posts: Array<Object>;
   };
 }

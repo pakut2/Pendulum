@@ -16,9 +16,7 @@ import { io } from "socket.io-client";
 import { mailEnum } from "../store/enum/mail.enum";
 
 const DashboardView = () => {
-  const socket = io("/");
-
-  const [newMessage, setNewMessage] = useState(false);
+  const [newPost, setNewPost] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -32,7 +30,9 @@ const DashboardView = () => {
     (state: RootState) => state.postList
   );
 
-  const { success } = useSelector((state: RootState) => state.postCreate);
+  const { success, post: createdPost } = useSelector(
+    (state: RootState) => state.postCreate
+  );
 
   const { success: successDelete, error: errorDelete } = useSelector(
     (state: RootState) => state.postDelete
@@ -50,9 +50,22 @@ const DashboardView = () => {
     (state: RootState) => state.resendEmail
   );
 
+  const { posts: postsFromSocket } = useSelector(
+    (state: RootState) => state.postsFromSocket
+  );
+
+  const socket = io("/");
+
   useEffect(() => {
-    socket.on("post", () => {
-      setNewMessage(true);
+    socket.on("post", (post: any) => {
+      if (post && (!userInfo || post.author.id !== userInfo.id)) {
+        postsFromSocket.push(post);
+        dispatch({
+          type: postEnum.POST_FROM_SOCKET_NEW,
+          payload: postsFromSocket,
+        });
+        setNewPost(true);
+      }
     });
 
     const getData = async () => {
@@ -73,6 +86,7 @@ const DashboardView = () => {
     getData();
 
     if (success) {
+      socket.emit("post", createdPost);
       dispatch({ type: postEnum.POST_CREATE_RESET });
     }
     if (userInfo && registerUser) {
@@ -94,7 +108,6 @@ const DashboardView = () => {
     registerUser,
     successLike,
     line,
-    newMessage,
     successResend,
     post,
     userInfo,
@@ -132,6 +145,13 @@ const DashboardView = () => {
                 <Post post={post} />
               </Card>
             ))}
+
+            {newPost &&
+              postsFromSocket.map((post: any) => (
+                <Card key={post.id} className="my-3" border="secondary">
+                  <Post post={post} />
+                </Card>
+              ))}
           </Fragment>
         )}
       </FormContainer>

@@ -26,7 +26,9 @@ export class PostsService {
 
   async findOne(id: string) {
     this.logger.log(`Getting post by ID - ${id}`);
-    const post = await this.postsRepository.findOne({ id });
+    const post = await this.postsRepository.findOne(id, {
+      relations: ["author"],
+    });
 
     if (post) {
       return post;
@@ -86,15 +88,4 @@ export class PostsService {
       throw new HttpException("Post does not exist", HttpStatus.NOT_FOUND);
     }
   }
-
-  // async queryFind(query: string) {
-  //   this.logger.log(`Running query on posts table / Param - ${query}`);
-  //   const data = await this.postsRepository
-  //     .createQueryBuilder()
-  //     .select("Post")
-  //     .where("to_tsvector(Post.line) @@ to_tsquery(:query)", { query })
-  //     .getMany();
-
-  //   return data;
-  // }
 }

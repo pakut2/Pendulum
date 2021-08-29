@@ -52,6 +52,7 @@ export const postCreateReducer = (state = {}, action: PayloadAction) => {
       return {
         loading: false,
         success: true,
+        post: payload,
       };
     case postEnum.POST_CREATE_FAIL:
       return { loading: false, error: payload };
@@ -93,6 +94,22 @@ export const postLikeReducer = (state = {}, action: PayloadAction) => {
       };
     case postEnum.POST_LIKE_FAIL:
       return { loading: false, error: payload };
+    default:
+      return state;
+  }
+};
+
+export const postsFromSocketReducer = (
+  state = { posts: [] },
+  action: PayloadAction
+) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case postEnum.POST_FROM_SOCKET_NEW:
+      return {
+        posts: payload,
+      };
     default:
       return state;
   }
