@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -14,7 +14,6 @@ import UserEditView from "./views/UserEditView";
 import MapView from "./views/MapView";
 import EmailConfirmationView from "./views/EmailConfirmationView";
 import NotFoundView from "./views/NotFoundView";
-import Switch from "react-bootstrap/esm/Switch";
 
 const App = () => {
   return (
@@ -42,8 +41,7 @@ const App = () => {
                 component={UserEditView}
               />
               <Route exact path="/" component={LandingView} />
-              {/* <Route path="/notfound" component={NotFoundView} />
-              <Redirect to="/notfound" /> */}
+              <Route component={NotFoundView} />
             </Switch>
           </Container>
         </main>
