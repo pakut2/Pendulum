@@ -4,7 +4,7 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/interface/RootState.interface";
 
-const LandingView = () => {
+const LandingView: React.FC = () => {
   const history = useHistory();
 
   const { userInfo } = useSelector((state: RootState) => state.userLogin);

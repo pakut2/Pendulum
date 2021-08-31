@@ -5,8 +5,6 @@ export const fileSignedUrlReducer = (state = {}, action: PayloadAction) => {
   const { type, payload } = action;
 
   switch (type) {
-    case fileEnum.FILE_URL_REQUEST:
-      return { loading: true };
     case fileEnum.FILE_URL_SUCCESS:
       return {
         loading: false,
@@ -23,8 +21,6 @@ export const fileS3PostReducer = (state = {}, action: PayloadAction) => {
   const { type, payload } = action;
 
   switch (type) {
-    case fileEnum.FILE_POST_REQUEST:
-      return { loading: true };
     case fileEnum.FILE_POST_SUCCESS:
       return {
         loading: false,
@@ -41,8 +37,6 @@ export const fileAvatarUpdateReducer = (state = {}, action: PayloadAction) => {
   const { type, payload } = action;
 
   switch (type) {
-    case fileEnum.FILE_AVATAR_UPDATE_REQUEST:
-      return { loading: true };
     case fileEnum.FILE_AVATAR_UPDATE_SUCCESS:
       return {
         loading: false,

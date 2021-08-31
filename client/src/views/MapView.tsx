@@ -21,6 +21,14 @@ interface MatchParams {
   id: string;
 }
 
+interface Viewport {
+  height: string;
+  width: string;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+}
+
 const navStyle = {
   top: 0,
   left: 0,
@@ -33,7 +41,7 @@ const geolocateStyle = {
   padding: "10px",
 };
 
-const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
+const MapView: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
   const postId = match.params.id;
 
   const [lat, setLat] = useState(54);
@@ -135,7 +143,7 @@ const MapView = ({ match }: RouteComponentProps<MatchParams>) => {
               {...viewport}
               mapStyle="mapbox://styles/mapbox/dark-v10"
               mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-              onViewportChange={(nextViewport: any) =>
+              onViewportChange={(nextViewport: Viewport) =>
                 setViewport(nextViewport)
               }
             >

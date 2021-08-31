@@ -10,7 +10,12 @@ import { RootState } from "../store/interface/RootState.interface";
 import { ztmEnum } from "../store/enum/ztm.enum";
 import { postEnum } from "../store/enum/post.enum";
 
-const CreatePostView = () => {
+interface Line {
+  routeShortName: string;
+  routeLongName: string;
+}
+
+const CreatePostView: React.FC = () => {
   const history = useHistory();
 
   const [lineNumber, setLineNumber] = useState("");
@@ -114,7 +119,7 @@ const CreatePostView = () => {
                       <option disabled selected>
                         Select Line
                       </option>
-                      {lines.map((line: any) => (
+                      {lines.map((line: Line | any) => (
                         <option
                           key={line.routeShortName}
                           value={line.routeShortName}
@@ -140,7 +145,7 @@ const CreatePostView = () => {
                         Select Direction
                       </option>
                       {lines.map(
-                        (line: any) =>
+                        (line: Line | any) =>
                           line.routeShortName === lineNumber && (
                             <Fragment>
                               <option

@@ -21,7 +21,7 @@ import { authEnum } from "../store/enum/auth.enum";
 import { fileEnum } from "../store/enum/file.enum";
 import { getSignedUrl, updateAvatar } from "../api/file";
 
-const ProfileView = () => {
+const ProfileView: React.FC = () => {
   const history = useHistory();
 
   const [name, setName] = useState("");
@@ -137,13 +137,17 @@ const ProfileView = () => {
     }
   };
 
-  const uploadHandler = async (e: any) => {
+  const uploadHandler = async (e: SyntheticEvent | any) => {
+    await submitHandler(e);
+
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
 
+    const maxFileSize = 10485760;
+
     if (
-      file.size <= 10485760 &&
+      file.size <= maxFileSize &&
       (file.type === "image/png" ||
         file.type === "image/jpg" ||
         file.type === "image/jpeg")
@@ -153,7 +157,6 @@ const ProfileView = () => {
         const url = await getSignedUrl(file.name);
         dispatch({ type: fileEnum.FILE_URL_SUCCESS, payload: url.data });
 
-        dispatch({ type: fileEnum.FILE_POST_REQUEST });
         try {
           const config = {
             headers: {
@@ -164,7 +167,6 @@ const ProfileView = () => {
           await axios.put(url.data.presignedURL, file, config);
           dispatch({ type: fileEnum.FILE_POST_SUCCESS });
 
-          dispatch({ type: fileEnum.FILE_AVATAR_UPDATE_REQUEST });
           try {
             const user = await updateAvatar(url.data.key);
             dispatch({

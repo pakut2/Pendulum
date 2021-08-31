@@ -23,7 +23,8 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   public async register(registrationData: RegisterDto) {
-    const hashedPassword = await bcrypt.hash(registrationData.password, 10);
+    const salt = 10;
+    const hashedPassword = await bcrypt.hash(registrationData.password, salt);
 
     try {
       const createdUser = await this.usersService.create({

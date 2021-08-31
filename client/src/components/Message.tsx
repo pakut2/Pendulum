@@ -2,11 +2,11 @@ import React from "react";
 import { Alert } from "react-bootstrap";
 
 interface PropTypes {
-  variant: string;
+  variant?: string;
   children: string | null | any;
 }
 
-const Message = ({ variant, children }: PropTypes) => {
+const Message: React.FC<PropTypes> = ({ variant, children }) => {
   return <Alert variant={variant}>{children}</Alert>;
 };
 

@@ -21,11 +21,12 @@ export class FilesService {
     const s3 = new S3();
 
     const key = `avatars/${uuid()}-${filename}`;
+    const urlExpirationTime = 3600;
 
     const presignedURL = s3.getSignedUrl("putObject", {
       Bucket: this.configService.get("AWS_PUBLIC_BUCKET_NAME"),
       Key: key,
-      Expires: 3600,
+      Expires: urlExpirationTime,
     });
 
     return { presignedURL, key };

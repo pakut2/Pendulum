@@ -15,7 +15,30 @@ import { ztmEnum } from "../store/enum/ztm.enum";
 import { io } from "socket.io-client";
 import { mailEnum } from "../store/enum/mail.enum";
 
-const DashboardView = () => {
+interface Post {
+  id: string;
+  line: string;
+  direction: string;
+  closestStop: string;
+  vehicleCode?: string;
+  description?: string;
+  likes: Array<string>;
+  createdAt: string;
+  author: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    isEmailConfirmed: boolean;
+    avatar?: {
+      id: string;
+      url: string;
+      key: string;
+    };
+  };
+}
+
+const DashboardView: React.FC = () => {
   const [newPost, setNewPost] = useState(false);
 
   const dispatch = useDispatch();
@@ -61,7 +84,7 @@ const DashboardView = () => {
   const socket = io("/");
 
   useEffect(() => {
-    socket.on("post", (post: any) => {
+    socket.on("post", (post: Post) => {
       if (post && (!userInfo || post.author.id !== userInfo.id)) {
         postsFromSocket.push(post);
         dispatch({
@@ -148,14 +171,14 @@ const DashboardView = () => {
           <Message>{error}</Message>
         ) : (
           <Fragment>
-            {posts.map((post: any) => (
+            {posts.map((post: Post | any) => (
               <Card key={post.id} className="my-3" border="secondary">
                 <Post post={post} />
               </Card>
             ))}
 
             {newPost &&
-              postsFromSocket.map((post: any) => (
+              postsFromSocket.map((post: Post | any) => (
                 <Card key={post.id} className="my-3" border="secondary">
                   <Post post={post} />
                 </Card>

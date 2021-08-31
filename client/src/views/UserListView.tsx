@@ -9,7 +9,15 @@ import { listUsers, deleteUser } from "../api/user";
 import { userEnum } from "../store/enum/user.enum";
 import { RootState } from "../store/interface/RootState.interface";
 
-const UserListView = () => {
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isEmailConfirmed: boolean;
+}
+
+const UserListView: React.FC = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
@@ -95,7 +103,7 @@ const UserListView = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user: any) => (
+            {users.map((user: User | any) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
                 <td>{user.name}</td>

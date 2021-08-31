@@ -7,7 +7,32 @@ import { RootState } from "../store/interface/RootState.interface";
 import { DateTime } from "luxon";
 import { postEnum } from "../store/enum/post.enum";
 
-const Post = ({ post }: any) => {
+interface PropTypes {
+  post: {
+    id: string;
+    line: string;
+    direction: string;
+    closestStop: string;
+    vehicleCode?: string;
+    description?: string;
+    likes: Array<string>;
+    createdAt: string;
+    author: {
+      id: string;
+      email: string;
+      name: string;
+      role: string;
+      isEmailConfirmed: boolean;
+      avatar?: {
+        id: string;
+        url: string;
+        key: string;
+      };
+    };
+  };
+}
+
+const Post: React.FC<PropTypes> = ({ post }) => {
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.userLogin);

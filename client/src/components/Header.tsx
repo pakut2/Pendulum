@@ -5,7 +5,7 @@ import { Navbar, Nav, Container, NavDropdown, Image } from "react-bootstrap";
 import { logout } from "../api/auth";
 import { RootState } from "../store/interface/RootState.interface";
 
-const Header = () => {
+const Header: React.FC = () => {
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.userLogin);

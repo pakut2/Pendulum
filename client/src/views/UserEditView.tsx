@@ -13,7 +13,9 @@ interface MatchParams {
   id: string;
 }
 
-const UserEditView = ({ match }: RouteComponentProps<MatchParams>) => {
+const UserEditView: React.FC<RouteComponentProps<MatchParams>> = ({
+  match,
+}) => {
   const userId = match.params.id;
 
   const history = useHistory();

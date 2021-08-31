@@ -9,7 +9,7 @@ import { register } from "../api/auth";
 import { RootState } from "../store/interface/RootState.interface";
 import { authEnum } from "../store/enum/auth.enum";
 
-const RegisterView = () => {
+const RegisterView: React.FC = () => {
   const history = useHistory();
 
   const [name, setName] = useState("");

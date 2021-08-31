@@ -1,11 +1,11 @@
 import React from "react";
 import { ReactSlackChat } from "react-slack-chat";
 
-interface PropTypes {
+interface Props {
   id: string;
 }
 
-const Chat = ({ id }: PropTypes) => {
+const Chat: React.FC<Props> = ({ id }) => {
   return (
     <div style={{ all: "initial" }}>
       <ReactSlackChat
