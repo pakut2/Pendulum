@@ -7,18 +7,22 @@ import { User } from "../../../server/src/users/entities/user.entity";
 import { UsersService } from "../../../server/src/users/users.service";
 import { AuthService } from "../../src/auth/auth.service";
 import mockedJwtService from "../utils/mocks/mockedJwtService";
-import { authServiceStub } from "./auth.service.spec.stub";
 import { ConfigModule } from "@nestjs/config";
 import { FilesService } from "../../../server/src/files/files.service";
 import { PublicFile } from "../../../server/src/files/entities/publicFile.entity";
 import { EmailConfirmationService } from "../../../server/src/email-confirmation/email-confirmation.service";
 import { Post } from "../../../server/src/posts/entities/post.entity";
 import { EmailService } from "../../../server/src/email/email.service";
+import { mockUser } from "../utils/mocks/mockUser";
 
 describe("AuthService", () => {
   let service: AuthService;
+  let usersService: UsersService;
 
+  let create: jest.Mock;
   beforeEach(async () => {
+    create = jest.fn();
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ load: [configuration] })],
       providers: [
@@ -31,7 +35,7 @@ describe("AuthService", () => {
         { provide: JwtService, useValue: mockedJwtService },
         {
           provide: getRepositoryToken(User),
-          useClass: authServiceStub,
+          useValue: { create },
         },
         {
           provide: getRepositoryToken(Post),
@@ -45,6 +49,7 @@ describe("AuthService", () => {
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+    usersService = module.get<UsersService>(UsersService);
   });
 
   afterEach(() => {
@@ -80,12 +85,32 @@ describe("AuthService", () => {
   });
 
   describe("on login", () => {
-    it("should throw an error if invalid credentials are provided", async () => {
-      try {
-        await service.getAuthenticatedUser(null, null);
-      } catch (err) {
-        expect(err.message).toMatch("Invalid Credentials");
-      }
+    describe("when invalid credentials are provided", () => {
+      it("should throw an error", async () => {
+        try {
+          await service.getAuthenticatedUser(null, null);
+        } catch (err) {
+          expect(err.message).toMatch("Invalid Credentials");
+        }
+      });
+    });
+
+    describe("when valid credentials are provided", () => {
+      it("should return the user", async () => {
+        jest
+          .spyOn(service, "getAuthenticatedUser")
+          .mockReturnValue(Promise.resolve(mockUser));
+        jest
+          .spyOn(service, "verifyPassword")
+          .mockReturnValue(Promise.resolve());
+
+        const user = await service.getAuthenticatedUser(
+          mockUser.email,
+          mockUser.password
+        );
+
+        expect(user).toEqual(mockUser);
+      });
     });
   });
 
@@ -104,6 +129,17 @@ describe("AuthService", () => {
       } catch (err) {
         expect(err.message).toMatch("User already exists");
       }
+    });
+
+    describe("and valid data is provided", () => {
+      it("should return a new user", async () => {
+        jest
+          .spyOn(usersService, "create")
+          .mockReturnValue(Promise.resolve(mockUser));
+
+        const newUser = await service.register(mockUser);
+        expect(newUser).toEqual(mockUser);
+      });
     });
   });
 

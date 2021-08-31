@@ -8,9 +8,11 @@ import { FilesService } from "../../../server/src/files/files.service";
 import { PostsService } from "../../../server/src/posts/posts.service";
 import { User } from "../../../server/src/users/entities/user.entity";
 import { PublicFile } from "../../../server/src/files/entities/publicFile.entity";
+import { mockUser } from "../utils/mocks/mockUser";
 
 describe("UsersService", () => {
   let service: UsersService;
+  let filesService: FilesService;
 
   let findOne: jest.Mock;
   let find: jest.Mock;
@@ -37,7 +39,7 @@ describe("UsersService", () => {
         },
         {
           provide: getRepositoryToken(PublicFile),
-          useValue: {},
+          useValue: { create, save, findOne },
         },
         {
           provide: getRepositoryToken(Post),
@@ -47,6 +49,7 @@ describe("UsersService", () => {
     }).compile();
 
     service = module.get<UsersService>(UsersService);
+    filesService = module.get<FilesService>(FilesService);
   });
 
   afterEach(() => {
@@ -212,7 +215,7 @@ describe("UsersService", () => {
       it("should resolve the promise", async () => {
         jest.spyOn(service, "delete");
 
-        await expect(service.delete("1", user)).resolves;
+        expect(service.delete("1", user)).resolves;
       });
     });
   });
@@ -221,7 +224,57 @@ describe("UsersService", () => {
     describe("and the user is matched", () => {
       it("should resolve the promise", async () => {
         jest.spyOn(service, "update").mockReturnValue(Promise.resolve());
-        await expect(service.markEmailAsConfirmed("test@test.test")).resolves;
+        expect(service.markEmailAsConfirmed("test@test.test")).resolves;
+      });
+    });
+  });
+
+  describe("when updating the avatar", () => {
+    describe("and user already has no avatar", () => {
+      let user: User;
+
+      beforeEach(() => {
+        user = new User();
+
+        findOne.mockReturnValue(Promise.resolve(user));
+      });
+
+      it("should update the user", async () => {
+        const updatedUser = await service.addAvatar("1", "1");
+
+        expect(updatedUser).toBe(user);
+      });
+    });
+
+    describe("and user already has the avatar", () => {
+      mockUser.avatar = { id: "1", url: "1", key: "1" } as PublicFile;
+
+      it("should update the user and delete the avatar", async () => {
+        jest
+          .spyOn(service, "getById")
+          .mockReturnValue(Promise.resolve(mockUser));
+        jest
+          .spyOn(filesService, "deletePublicFile")
+          .mockReturnValue(Promise.resolve());
+        const updatedUser = await service.addAvatar("1", "1");
+        expect(updatedUser).toBe(mockUser);
+      });
+    });
+  });
+
+  describe("when deleting the avatar", () => {
+    describe("and user already has an avatar", () => {
+      mockUser.avatar = { id: "1", url: "1", key: "1" } as PublicFile;
+
+      it("should delete the avatar from repository", async () => {
+        jest
+          .spyOn(service, "getById")
+          .mockReturnValue(Promise.resolve(mockUser));
+        jest
+          .spyOn(filesService, "deletePublicFile")
+          .mockReturnValue(Promise.resolve());
+
+        await service.deleteAvatar("1");
       });
     });
   });

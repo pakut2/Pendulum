@@ -9,12 +9,17 @@ import { User } from "../../../server/src/users/entities/user.entity";
 import { UsersService } from "../../../server/src/users/users.service";
 import { UsersController } from "../../src/users/users.controller";
 import { Post } from "../../../server/src/posts/entities/post.entity";
+import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
+import { mockUser } from "../utils/mocks/mockUser";
 
 describe("UsersController", () => {
   let controller: UsersController;
   let service: UsersService;
 
+  let addAvatar: jest.Mock;
   beforeEach(async () => {
+    let addAvatar = jest.fn();
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ load: [configuration] })],
       controllers: [UsersController],
@@ -105,6 +110,15 @@ describe("UsersController", () => {
         ).rejects.toThrow();
       });
     });
+
+    describe("and logged in user is not the target user", () => {
+      it("should throw an error", async () => {
+        jest.spyOn(controller, "authenticate").mockReturnValue(mockUser);
+        return expect(
+          controller.updateUser("2", mockUser, null)
+        ).rejects.toThrow();
+      });
+    });
   });
 
   describe("when updating the user as admin", () => {
@@ -128,6 +142,14 @@ describe("UsersController", () => {
     describe("and the user is not found", () => {
       it("should throw an error", async () => {
         return expect(controller.deleteUser(null, null)).rejects.toThrow();
+      });
+    });
+  });
+
+  describe("when adding a new avatar", () => {
+    describe("and invalid data is provided", () => {
+      it("should throw an error", async () => {
+        return expect(controller.addAvatar(null, null)).rejects.toThrow();
       });
     });
   });

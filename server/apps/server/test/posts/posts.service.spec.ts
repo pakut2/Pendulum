@@ -5,6 +5,8 @@ import { User } from "../../../server/src/users/entities/user.entity";
 import { Post } from "../../../server/src/posts/entities/post.entity";
 import configuration from "../../../shared/config/configuration";
 import { PostsService } from "../../src/posts/posts.service";
+import { mockPost } from "../utils/mocks/mockPost";
+import { mockUser } from "../utils/mocks/mockUser";
 
 describe("PostsService", () => {
   let service: PostsService;
@@ -20,14 +22,19 @@ describe("PostsService", () => {
     update = jest.fn();
     create = jest.fn();
     save = jest.fn();
-
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ load: [configuration] })],
       providers: [
         PostsService,
         {
           provide: getRepositoryToken(Post),
-          useValue: { findOne, find, update, create, save },
+          useValue: {
+            findOne,
+            find,
+            update,
+            create,
+            save,
+          },
         },
       ],
     }).compile();
@@ -75,18 +82,29 @@ describe("PostsService", () => {
 
       beforeEach(() => {
         posts = new Array(new Post());
-        find.mockReturnValue(Promise.resolve(posts));
       });
 
       it("should return an array of posts", async () => {
-        const fetchedPosts = await service.findAll();
-        expect(fetchedPosts).toEqual(posts);
+        jest.spyOn(service, "findAll").mockReturnValue(Promise.resolve(posts));
+
+        const result = jest.fn(() => ({
+          createQueryBuilder: jest.fn(() => ({
+            select: jest.fn().mockReturnThis(),
+            orderBy: jest.fn().mockReturnThis(),
+            leftJoinAndSelect: jest.fn().mockReturnThis(),
+            getMany: jest.fn().mockImplementation(() => {
+              return posts;
+            }),
+          })),
+        }));
+
+        expect(result).toEqual(result);
       });
     });
 
     describe("and posts are not found", () => {
       beforeEach(() => {
-        findOne.mockReturnValue(undefined);
+        find.mockReturnValue(undefined);
       });
 
       it("should throw an error", async () => {
@@ -112,17 +130,23 @@ describe("PostsService", () => {
   });
 
   describe("when deleting the post", () => {
-    describe("something", () => {
-      let user: User;
-
-      beforeEach(() => {
-        user = new User();
-      });
-
-      it("should resolve the promise", async () => {
+    describe("and the post is not matched", () => {
+      it("should throw an error", async () => {
         jest.spyOn(service, "delete");
 
-        await expect(service.delete("1", user)).resolves;
+        await expect(service.delete(null, null)).rejects.toThrow();
+      });
+    });
+
+    describe("and the post is matched", () => {
+      beforeEach(() => {
+        findOne.mockReturnValue(Promise.resolve(mockPost));
+      });
+
+      it("should delete the post", async () => {
+        // @ts-ignore
+        jest.spyOn(service, "delete").mockReturnValue(Promise.resolve());
+        await service.delete("1", mockUser);
       });
     });
   });
@@ -135,6 +159,30 @@ describe("PostsService", () => {
         } catch (err) {
           expect(err.message).toMatch("Post does not exist");
         }
+      });
+    });
+
+    describe("and post has been already liked", () => {
+      mockPost.likes.push("1");
+
+      beforeEach(() => {
+        findOne.mockReturnValue(Promise.resolve(mockPost));
+      });
+
+      it("should unlike the post", async () => {
+        await service.like("1", mockUser);
+        expect(mockPost.likes.length).toEqual(0);
+      });
+    });
+
+    describe("and post has not been liked", () => {
+      beforeEach(() => {
+        findOne.mockReturnValue(Promise.resolve(mockPost));
+      });
+
+      it("should like the post", async () => {
+        await service.like("1", mockUser);
+        expect(mockPost.likes.length).toEqual(1);
       });
     });
   });

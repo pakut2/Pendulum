@@ -1,5 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { CronModule } from "./cron.module";
+import { CronService } from "./cron.service";
 declare const module: any;
 
 async function bootstrap() {
@@ -12,5 +13,8 @@ async function bootstrap() {
 
   const PORT = process.env.PORT_CRON || 5001;
   await cron.listen(PORT);
+
+  const cronService = cron.get(CronService);
+  cronService.postJob();
 }
 bootstrap();

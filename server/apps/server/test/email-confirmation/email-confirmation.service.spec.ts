@@ -12,6 +12,7 @@ import { User } from "../../../server/src/users/entities/user.entity";
 import { PublicFile } from "../../../server/src/files/entities/publicFile.entity";
 import { Post } from "../../../server/src/posts/entities/post.entity";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { mockUser } from "../utils/mocks/mockUser";
 
 describe("EmailConfirmationService", () => {
   let service: EmailConfirmationService;
@@ -62,6 +63,20 @@ describe("EmailConfirmationService", () => {
 
   describe("when confirming email", () => {
     describe("and email has been already confirmed", () => {
+      beforeEach(() => {
+        findOne.mockReturnValue(Promise.resolve(mockUser));
+      });
+
+      it("should throw an error", async () => {
+        try {
+          await service.confirmEmail(mockUser.email);
+        } catch (err) {
+          expect(err.message).toMatch("Email already confirmed");
+        }
+      });
+    });
+
+    describe("and email has been already confirmed", () => {
       let user: User;
 
       beforeEach(() => {
@@ -109,6 +124,20 @@ describe("EmailConfirmationService", () => {
           await service.resendConfirmationLink(user.id);
         } catch (err) {
           expect(err.message).toMatch("No recipients defined");
+        }
+      });
+    });
+
+    describe("and email has been already confirmed", () => {
+      beforeEach(() => {
+        findOne.mockReturnValue(Promise.resolve(mockUser));
+      });
+
+      it("should throw an error", async () => {
+        try {
+          await service.resendConfirmationLink(mockUser.id);
+        } catch (err) {
+          expect(err.message).toMatch("Email already confirmed");
         }
       });
     });
