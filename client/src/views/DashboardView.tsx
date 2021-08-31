@@ -54,6 +54,10 @@ const DashboardView = () => {
     (state: RootState) => state.postsFromSocket
   );
 
+  const { success: emailConfirmationSuccess } = useSelector(
+    (state: RootState) => state.emailConfirmation
+  );
+
   const socket = io("/");
 
   useEffect(() => {
@@ -101,6 +105,9 @@ const DashboardView = () => {
     if (successResend) {
       dispatch({ type: mailEnum.MAIL_RESEND_RESET });
     }
+    if (emailConfirmationSuccess) {
+      dispatch({ type: mailEnum.MAIL_CONFIRM_RESET });
+    }
   }, [
     dispatch,
     success,
@@ -111,6 +118,7 @@ const DashboardView = () => {
     successResend,
     post,
     userInfo,
+    emailConfirmationSuccess,
   ]);
 
   return (

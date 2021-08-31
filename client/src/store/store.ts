@@ -8,7 +8,15 @@ const userInfoFromStorage = localStorage.getItem("userInfo")
     JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
-const initialState = { userLogin: { userInfo: userInfoFromStorage } };
+const userRegisterFromStorage = localStorage.getItem("userRegister")
+  ? //@ts-ignore
+    JSON.parse(localStorage.getItem("userRegister"))
+  : null;
+
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+  userRegister: { userInfo: userRegisterFromStorage },
+};
 
 const middleware = [thunk];
 

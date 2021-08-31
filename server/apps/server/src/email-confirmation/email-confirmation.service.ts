@@ -20,7 +20,9 @@ export class EmailConfirmationService {
       expiresIn: "216000",
     });
 
-    const url = `${this.configService.get("EMAIL_CONFIRMATION_URL")}/${token}`;
+    const url = `${this.configService.get(
+      "EMAIL_CONFIRMATION_URL"
+    )}?token=${token}`;
 
     const html = `<!DOCTYPE html><html><style>div{text-align: center;}button {background:#375a7f;padding:1rem;border-radius:0.5rem;}a{text-decoration;none;color:#fff;}</style><body><div><h1>Welcome to Pendulum!</h1><button><a href="${url}">Click here to confirm email address</a></button></div></body></html>`;
 

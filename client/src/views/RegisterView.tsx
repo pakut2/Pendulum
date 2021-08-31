@@ -53,6 +53,8 @@ const RegisterView = () => {
           type: authEnum.AUTH_REGISTER_SUCCESS,
           payload: data,
         });
+
+        localStorage.setItem("userRegister", JSON.stringify(data));
       } catch (err) {
         dispatch({
           type: authEnum.AUTH_REGISTER_FAIL,

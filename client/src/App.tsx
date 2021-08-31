@@ -12,7 +12,6 @@ import UserListView from "./views/UserListView";
 import CreatePostView from "./views/CreatePostView";
 import UserEditView from "./views/UserEditView";
 import MapView from "./views/MapView";
-import EmailConfirmationView from "./views/EmailConfirmationView";
 import NotFoundView from "./views/NotFoundView";
 
 const App = () => {
@@ -23,17 +22,12 @@ const App = () => {
         <main className="py-3">
           <Container>
             <Switch>
-              <Route path="/login" component={LoginView} />
+              <Route path="/login:token?" component={LoginView} />
               <Route path="/register" component={RegisterView} />
               <Route path="/profile" component={ProfileView} />
               <Route path="/dashboard" component={DashboardView} />
               <Route path="/post" component={CreatePostView} />
               <Route exact path="/map/:id" component={MapView} />
-              <Route
-                exact
-                path="/confirm-email/:token"
-                component={EmailConfirmationView}
-              />
               <Route path="/admin/userlist" component={UserListView} />
               <Route
                 exact

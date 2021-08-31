@@ -11,6 +11,8 @@ export const emailConfirmationReducer = (state = {}, action: PayloadAction) => {
       return { loading: false, success: true };
     case mailEnum.MAIL_CONFIRM_FAIL:
       return { loading: false, error: payload };
+    case mailEnum.MAIL_CONFIRM_RESET:
+      return {};
     default:
       return state;
   }

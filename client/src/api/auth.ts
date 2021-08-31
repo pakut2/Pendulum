@@ -23,6 +23,7 @@ export const login = async (email: string, password: string) => {
 export const logout =
   () => async (dispatch: ThunkDispatch<void, unknown, AnyAction>) => {
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("userRegister");
 
     dispatch({
       type: authEnum.AUTH_LOGOUT,
