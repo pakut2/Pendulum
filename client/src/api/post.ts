@@ -37,8 +37,7 @@ export const createPost = async ({
     config
   );
 
-  const populatedPost = await getPostDetails(data.id);
-  return populatedPost;
+  return data;
 };
 
 export const deletePost = async (id: string) => {

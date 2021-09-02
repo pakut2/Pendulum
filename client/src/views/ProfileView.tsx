@@ -312,15 +312,16 @@ const ProfileView: React.FC = () => {
                   }}
                 />
               </Form.Group>
-              <Form.Group className="py-1" controlId="image">
+              <Form.Group className="py-1" controlId="image-file">
                 <Form.Label>Avatar</Form.Label>
-                <Form.File
+                <Form.Control
+                  className="form-control"
+                  type="file"
                   id="image-file"
-                  custom
                   onChange={uploadHandler}
-                ></Form.File>
+                />
               </Form.Group>
-              <Button type="submit" variant="primary" className="my-1">
+              <Button type="submit" variant="primary" className="my-2">
                 Update
               </Button>
             </Form>

@@ -10,6 +10,7 @@ import thunk from "redux-thunk";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
 import { userEnum } from "../../store/enum/user.enum";
+import { fileEnum } from "../../store/enum/file.enum";
 
 const mockStore = configureMockStore([thunk]);
 
@@ -30,6 +31,15 @@ beforeEach(() => {
     },
     authenticatedUser: { user: { id: "1" } },
     userUpdate: { success: false },
+    fileSignedUrl: {
+      error: null,
+    },
+    fileS3Post: {
+      error: null,
+    },
+    fileAvatarUpdate: {
+      success: true,
+    },
   });
 });
 
@@ -76,6 +86,15 @@ describe("ProfileView", () => {
         },
         authenticatedUser: {},
         userUpdate: { success: false },
+        fileSignedUrl: {
+          error: null,
+        },
+        fileS3Post: {
+          error: null,
+        },
+        fileAvatarUpdate: {
+          success: true,
+        },
       });
 
       render(
@@ -146,6 +165,32 @@ describe("ProfileView", () => {
       expect(storeMock.getActions()).toContainEqual({
         type: userEnum.USER_UPDATE_REQUEST,
       });
+    });
+  });
+
+  describe("when uploading file", () => {
+    it("should upload the file", () => {
+      render(
+        <Provider store={storeMock}>
+          <BrowserRouter>
+            <ProfileView />
+          </BrowserRouter>
+        </Provider>
+      );
+
+      const file = new File([], "test.png", {
+        type: "image/png",
+      });
+
+      fireEvent.click(screen.getByText(/Edit Profile/));
+      fireEvent.change(screen.getByLabelText("Avatar"), {
+        target: { files: [file] },
+      });
+
+      // @ts-ignore
+      expect(screen.getByLabelText("Avatar").files[0].name).toBe("test.png");
+      // @ts-ignore
+      expect(screen.getByLabelText("Avatar").files.length).toBe(1);
     });
   });
 });

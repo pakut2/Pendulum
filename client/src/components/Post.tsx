@@ -7,7 +7,7 @@ import { RootState } from "../store/interface/RootState.interface";
 import { DateTime } from "luxon";
 import { postEnum } from "../store/enum/post.enum";
 
-interface PropTypes {
+interface Props {
   post: {
     id: string;
     line: string;
@@ -32,7 +32,7 @@ interface PropTypes {
   };
 }
 
-const Post: React.FC<PropTypes> = ({ post }) => {
+const Post: React.FC<Props> = ({ post }) => {
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.userLogin);

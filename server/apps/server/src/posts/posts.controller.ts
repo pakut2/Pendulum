@@ -51,9 +51,4 @@ export class PostsController {
   async likePost(@Param("id") id: string, @Req() request: RequestWithUser) {
     await this.postsService.like(id, request.user);
   }
-
-  // @Get("search/:query")
-  // async queryFind(@Param("query") query: string) {
-  //   return this.postsService.queryFind(query);
-  // }
 }

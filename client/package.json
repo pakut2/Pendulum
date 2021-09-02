@@ -71,7 +71,8 @@
       "interface",
       "types",
       "assets",
-      "store.ts"
+      "store.ts",
+      "mocks"
     ]
   }
 }

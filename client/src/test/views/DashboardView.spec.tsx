@@ -56,6 +56,12 @@ beforeEach(() => {
     resendEmail: {
       success: true,
     },
+    postsFromSocket: {
+      posts: [],
+    },
+    emailConfirmation: {
+      success: true,
+    },
   });
 });
 

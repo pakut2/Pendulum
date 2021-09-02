@@ -19,7 +19,8 @@ const LoginView: React.FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showResendModal, setShowResendModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -42,7 +43,7 @@ const LoginView: React.FC = () => {
 
   useEffect(() => {
     if (token) {
-      setShowModal(true);
+      setShowConfirmModal(true);
     }
 
     if (userInfo) {
@@ -101,7 +102,7 @@ const LoginView: React.FC = () => {
         type: mailEnum.MAIL_CONFIRM_SUCCESS,
       });
 
-      setShowModal(false);
+      setShowConfirmModal(false);
 
       dispatch({ type: authEnum.AUTH_REGISTER_RESET });
       localStorage.removeItem("userRegister");
@@ -121,17 +122,24 @@ const LoginView: React.FC = () => {
   return (
     <FormContainer>
       <Modal
-        show={showModal}
+        show={showConfirmModal}
         onHide={() => {
-          setShowModal(false);
+          setShowConfirmModal(false);
         }}
         backdrop="static"
         keyboard={false}
         centered
         className="pb-5"
       >
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Welcome to Pendulum!</Modal.Title>
+          <Button
+            className="btn btn-close"
+            data-dismiss="modal"
+            onClick={() => {
+              setShowConfirmModal(false);
+            }}
+          />
         </Modal.Header>
         <Modal.Body>
           {emailConfirmationError && (
@@ -151,20 +159,63 @@ const LoginView: React.FC = () => {
         </Modal.Footer>
       </Modal>
 
+      {user && (
+        <Modal
+          show={showResendModal}
+          onHide={() => {
+            setShowResendModal(false);
+          }}
+          backdrop="static"
+          keyboard={false}
+          centered
+          className="pb-5"
+        >
+          <Modal.Header>
+            <Modal.Title>Welcome to Pendulum!</Modal.Title>
+            <Button
+              className="btn btn-close"
+              data-dismiss="modal"
+              onClick={() => {
+                setShowResendModal(false);
+              }}
+            />
+          </Modal.Header>
+          <Modal.Body>
+            {loadingResend && <Loader />}
+            {success && (
+              <Message variant="primary">Email has been sent</Message>
+            )}
+            {errorResend && <Message>{errorResend}</Message>}
+            Confirmation Email sent to{" "}
+            <strong style={{ textDecoration: "underline" }}>
+              {user.email}
+            </strong>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              className="btn btn-primary"
+              data-testid="resend-email-btn"
+              onClick={() => {
+                resendHandler(user.id);
+              }}
+            >
+              Resend Email
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+
       <h1>Sign In</h1>
-      {loadingResend && <Loader />}
       {emailConfirmationSuccess && (
         <Message variant="success">Email Confirmed!</Message>
       )}
-      {success && <Message variant="primary">Email has been sent</Message>}
       {error && <Message>{error}</Message>}
-      {errorResend && <Message>{errorResend}</Message>}
       {user && (
         <Message variant="primary">
           <span
             style={{ cursor: "pointer" }}
             onClick={() => {
-              resendHandler(user.id);
+              setShowResendModal(true);
             }}
           >
             Confirmation Email sent to{" "}

@@ -48,7 +48,12 @@ export class PostsService {
       author: user,
     });
     await this.postsRepository.save(newPost);
-    return newPost;
+
+    const populatedPost = await this.postsRepository.findOne(newPost.id, {
+      relations: ["author"],
+    });
+
+    return populatedPost;
   }
 
   async delete(id: string, user: User) {

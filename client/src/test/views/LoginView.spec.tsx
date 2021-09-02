@@ -35,6 +35,9 @@ beforeEach(() => {
     resendEmail: {
       success: true,
     },
+    emailConfirmation: {
+      success: true,
+    },
   });
 });
 
@@ -117,6 +120,7 @@ describe("LoginView", () => {
       );
 
       fireEvent.click(screen.getByText(/Click to resend email/));
+      fireEvent.click(screen.getByTestId("resend-email-btn"));
 
       // @ts-ignore
       expect(storeMock.getActions()).toContainEqual({
