@@ -16,13 +16,19 @@ export class PostsService {
   async findAll() {
     this.logger.log(`Getting all posts`);
 
-    const posts = await this.postsRepository
-      .createQueryBuilder()
-      .select("Post")
-      .orderBy("Post.likes", "DESC")
-      .leftJoinAndSelect("Post.author", "author")
-      .leftJoinAndSelect("author.avatar", "avatar")
-      .getMany();
+    const posts = await this.postsRepository.find({
+      relations: ["author"],
+      order: { likesCount: "DESC" },
+    });
+
+    // const posts = await this.postsRepository
+    //   .createQueryBuilder()
+    //   .select("Post")
+    //   .addSelect("array_length(Post.likes, 1)", "likescount")
+    //   .orderBy("likescount", "DESC")
+    //   .leftJoinAndSelect("Post.author", "author")
+    //   .leftJoin("author.avatar", "avatar")
+    //   .getMany();
 
     return posts;
   }
@@ -85,9 +91,11 @@ export class PostsService {
       if (post) {
         if (index > -1) {
           likes.splice(index, 1);
+          post.likesCount--;
           await this.postsRepository.save(post);
         } else {
           likes.push(user.id);
+          post.likesCount++;
           await this.postsRepository.save(post);
         }
       }

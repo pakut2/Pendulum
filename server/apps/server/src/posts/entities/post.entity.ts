@@ -30,6 +30,9 @@ export class Post {
   @Column("text", { default: [], array: true })
   public likes?: string[];
 
+  @Column({ default: 0 })
+  public likesCount: number;
+
   @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
 

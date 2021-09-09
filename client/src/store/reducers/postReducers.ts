@@ -16,7 +16,7 @@ export const postListReducer = (
         posts: payload,
       };
     case postEnum.POST_LIST_FAIL:
-      return { loading: false, error: payload };
+      return { loading: false, posts: [], error: payload };
     default:
       return state;
   }
