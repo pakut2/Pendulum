@@ -111,12 +111,13 @@ const CreatePostView: React.FC = () => {
                     <Form.Label>Line</Form.Label>
                     <Form.Control
                       as="select"
+                      defaultValue="Select Line"
                       required
                       onChange={(e) => {
                         setLineNumber(e.target.value);
                       }}
                     >
-                      <option disabled selected>
+                      <option key="placeholder-line" disabled>
                         Select Line
                       </option>
                       {lines.map((line: Line | any) => (
@@ -136,12 +137,13 @@ const CreatePostView: React.FC = () => {
                     <Form.Control
                       as="select"
                       required
+                      defaultValue="Select Direction"
                       disabled={lineNumber === ""}
                       onChange={(e) => {
                         setDirection(e.target.value);
                       }}
                     >
-                      <option disabled selected>
+                      <option key="placeholder-dir" disabled>
                         Select Direction
                       </option>
                       {lines.map(
@@ -172,7 +174,7 @@ const CreatePostView: React.FC = () => {
                   <Form.Group className="py-1" controlId="code">
                     <Form.Label>Vehicle Code</Form.Label>
                     <Form.Control
-                      type="code"
+                      type="text"
                       placeholder="Vehicle Code"
                       value={vehicleCode}
                       onChange={(e) => {
@@ -186,7 +188,7 @@ const CreatePostView: React.FC = () => {
                   <Form.Group className="py-1" controlId="stop">
                     <Form.Label>Closest Stop</Form.Label>
                     <Form.Control
-                      type="stop"
+                      type="text"
                       placeholder="Closest Stop Name"
                       value={closestStop}
                       required

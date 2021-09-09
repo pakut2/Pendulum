@@ -317,7 +317,6 @@ const ProfileView: React.FC = () => {
                 <Form.Control
                   className="form-control"
                   type="file"
-                  id="image-file"
                   onChange={uploadHandler}
                 />
               </Form.Group>
