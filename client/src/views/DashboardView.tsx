@@ -100,7 +100,7 @@ const DashboardView: React.FC = () => {
       try {
         const data = await listPosts();
         dispatch({ type: postEnum.POST_LIST_SUCCESS, payload: data });
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: postEnum.POST_LIST_FAIL,
           payload:

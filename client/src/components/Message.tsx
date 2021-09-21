@@ -7,7 +7,13 @@ interface Props {
 }
 
 const Message: React.FC<Props> = ({ variant, children }) => {
-  return <Alert variant={variant}>{children}</Alert>;
+  return (
+    <Alert variant={variant}>
+      {children === "Request failed with status code 500"
+        ? "Something went wrong..."
+        : children}
+    </Alert>
+  );
 };
 
 Message.defaultProps = {

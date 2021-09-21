@@ -50,7 +50,7 @@ const UserEditView: React.FC<RouteComponentProps<MatchParams>> = ({
               type: userEnum.USER_DETAILS_SUCCESS,
               payload: data,
             });
-          } catch (err) {
+          } catch (err: any) {
             dispatch({
               type: userEnum.USER_DETAILS_FAIL,
               payload:

@@ -47,7 +47,7 @@ const Post: React.FC<Props> = ({ post }) => {
       try {
         await deletePost(id);
         dispatch({ type: postEnum.POST_DELETE_SUCCESS });
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: postEnum.POST_DELETE_FAIL,
           payload:
@@ -64,7 +64,7 @@ const Post: React.FC<Props> = ({ post }) => {
     try {
       await likePost(id);
       dispatch({ type: postEnum.POST_LIKE_SUCCESS });
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: postEnum.POST_LIKE_FAIL,
         payload:

@@ -53,7 +53,7 @@ const CreatePostView: React.FC = () => {
           type: ztmEnum.ZTM_LIST_DETAILS_SUCCESS,
           payload: data,
         });
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: ztmEnum.ZTM_LIST_DETAILS_FAIL,
           payload:
@@ -80,7 +80,7 @@ const CreatePostView: React.FC = () => {
         description,
       });
       dispatch({ type: postEnum.POST_CREATE_SUCCESS, payload: post });
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: postEnum.POST_CREATE_FAIL,
         payload:

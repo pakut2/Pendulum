@@ -55,7 +55,7 @@ const RegisterView: React.FC = () => {
         });
 
         localStorage.setItem("userRegister", JSON.stringify(data));
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: authEnum.AUTH_REGISTER_FAIL,
           payload:

@@ -74,7 +74,7 @@ const MapView: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
         try {
           const data = await getPostDetails(postId);
           dispatch({ type: postEnum.POST_GET_DETAILS_SUCCESS, payload: data });
-        } catch (err) {
+        } catch (err: any) {
           dispatch({
             type: postEnum.POST_GET_DETAILS_FAIL,
             payload:
@@ -92,7 +92,7 @@ const MapView: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
               type: ztmEnum.ZTM_GET_LOCATION_SUCCESS,
               payload: data,
             });
-          } catch (err) {
+          } catch (err: any) {
             dispatch({
               type: ztmEnum.ZTM_GET_LOCATION_FAIL,
               payload:

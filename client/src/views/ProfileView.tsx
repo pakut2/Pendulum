@@ -78,7 +78,7 @@ const ProfileView: React.FC = () => {
           try {
             const data = await getAuthenticatedUser();
             dispatch({ type: userEnum.USER_GET_AUTH_SUCCESS, payload: data });
-          } catch (err) {
+          } catch (err: any) {
             dispatch({
               type: userEnum.USER_GET_AUTH_FAIL,
               payload:
@@ -125,7 +125,7 @@ const ProfileView: React.FC = () => {
         });
 
         localStorage.setItem("userInfo", JSON.stringify(data));
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: userEnum.USER_UPDATE_FAIL,
           payload:
@@ -180,7 +180,7 @@ const ProfileView: React.FC = () => {
             });
 
             localStorage.setItem("userInfo", JSON.stringify(user.data));
-          } catch (err) {
+          } catch (err: any) {
             dispatch({
               type: fileEnum.FILE_AVATAR_UPDATE_FAIL,
               payload:
@@ -189,7 +189,7 @@ const ProfileView: React.FC = () => {
                   : err.message,
             });
           }
-        } catch (err) {
+        } catch (err: any) {
           dispatch({
             type: fileEnum.FILE_POST_FAIL,
             payload:
@@ -198,7 +198,7 @@ const ProfileView: React.FC = () => {
                 : err.message,
           });
         }
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: fileEnum.FILE_URL_FAIL,
           payload:

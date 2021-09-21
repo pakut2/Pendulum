@@ -44,7 +44,7 @@ const UserListView: React.FC = () => {
             type: userEnum.USER_LIST_SUCCESS,
             payload: data,
           });
-        } catch (err) {
+        } catch (err: any) {
           dispatch({
             type: userEnum.USER_LIST_FAIL,
             payload:
@@ -72,7 +72,7 @@ const UserListView: React.FC = () => {
         dispatch({
           type: userEnum.USER_DELETE_SUCCESS,
         });
-      } catch (err) {
+      } catch (err: any) {
         dispatch({
           type: userEnum.USER_DELETE_FAIL,
           payload:

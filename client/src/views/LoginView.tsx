@@ -61,7 +61,7 @@ const LoginView: React.FC = () => {
         payload: data,
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: authEnum.AUTH_LOGIN_FAIL,
         payload:
@@ -81,7 +81,7 @@ const LoginView: React.FC = () => {
       dispatch({
         type: mailEnum.MAIL_RESEND_SUCCESS,
       });
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: mailEnum.MAIL_RESEND_FAIL,
         payload:
@@ -108,7 +108,7 @@ const LoginView: React.FC = () => {
       localStorage.removeItem("userRegister");
 
       history.push("/login");
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: mailEnum.MAIL_CONFIRM_FAIL,
         payload:
