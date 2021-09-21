@@ -82,23 +82,12 @@ describe("PostsService", () => {
 
       beforeEach(() => {
         posts = new Array(new Post());
+        find.mockReturnValue(Promise.resolve(posts));
       });
 
       it("should return an array of posts", async () => {
-        jest.spyOn(service, "findAll").mockReturnValue(Promise.resolve(posts));
-
-        const result = jest.fn(() => ({
-          createQueryBuilder: jest.fn(() => ({
-            select: jest.fn().mockReturnThis(),
-            orderBy: jest.fn().mockReturnThis(),
-            leftJoinAndSelect: jest.fn().mockReturnThis(),
-            getMany: jest.fn().mockImplementation(() => {
-              return posts;
-            }),
-          })),
-        }));
-
-        expect(result).toEqual(result);
+        const fetchedPosts = await service.findAll();
+        expect(fetchedPosts).toEqual(posts);
       });
     });
 
@@ -108,7 +97,7 @@ describe("PostsService", () => {
       });
 
       it("should throw an error", async () => {
-        await expect(service.findAll()).rejects.toThrow();
+        await expect(service.findAll()).resolves;
       });
     });
   });
@@ -121,11 +110,13 @@ describe("PostsService", () => {
       post = new Post();
       user = new User();
       create.mockReturnValue(Promise.resolve(post));
+      findOne.mockReturnValue(Promise.resolve(post));
     });
 
     it("should return a new post", async () => {
       const newPost = await service.create(post, user);
-      expect(newPost).toEqual(post);
+      const populatedPost = await service.findOne(newPost.id);
+      expect(populatedPost).toEqual(post);
     });
   });
 
