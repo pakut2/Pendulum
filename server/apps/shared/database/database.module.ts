@@ -19,6 +19,9 @@ import { User } from "../../server/src/users/entities/user.entity";
         database: configService.get("POSTGRES_DB"),
         entities: [PublicFile, Post, User],
         synchronize: true,
+        extra: {
+          ssl: true,
+        },
       }),
     }),
   ],
