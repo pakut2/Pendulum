@@ -1,0 +1,1 @@
+web: node server/dist/apps/server/main.js; node server/dist/apps/cron/main.js
