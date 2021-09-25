@@ -8,8 +8,8 @@
     "cron": "cd server && nest start cron --watch",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run cron\" \"npm run client\"",
-    "postinstall": "cd server && npm run prebuild && npm run build",
-    "heroku-postbuild": "npm install --prefix server && npm install --prefix client && npm run build --prefix client"
+    "postinstall": "cd server && npm install && npm run prebuild && npm run build",
+    "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "",
