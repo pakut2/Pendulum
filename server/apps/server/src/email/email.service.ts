@@ -14,8 +14,7 @@ export class EmailService {
         user: configService.get("EMAIL_USER"),
         pass: configService.get("EMAIL_PASSWORD"),
       },
-      ignoreTLS: false,
-      secure: false,
+      secure: true,
     });
   }
 
