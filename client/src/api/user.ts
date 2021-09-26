@@ -63,7 +63,7 @@ export const adminUpdateUser =
       dispatch({
         type: userEnum.USER_ADMIN_UPDATE_SUCCESS,
       });
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: userEnum.USER_ADMIN_UPDATE_FAIL,
         payload:

@@ -35,7 +35,7 @@ export const logout =
 
     try {
       await axios.post("/api/auth/logout");
-    } catch (err) {
+    } catch (err: any) {
       dispatch({
         type: authEnum.AUTH_LOGOUT_FAIL,
         payload:
