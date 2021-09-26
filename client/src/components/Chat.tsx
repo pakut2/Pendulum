@@ -16,7 +16,7 @@ const Chat: React.FC<Props> = ({ id }) => {
             id: "C02BMTED2AJ",
           },
         ]}
-        apiToken={process.env.REACT_APP_SLACK_BOT_TOKEN}
+        apiToken="eG94Yi0yNDA4Nzg1MDIyMzU2LTIzOTU4OTI3NDQ3OTAtZ0kxNUk0RDFKYmc3MkkwbVcxbEhNUmYz"
         helpText="Chat"
         singleUserMode={false}
         defaultMessage="Welcome to Pendulum!"

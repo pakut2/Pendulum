@@ -142,7 +142,7 @@ const MapView: React.FC<RouteComponentProps<MatchParams>> = ({ match }) => {
             <MapGL
               {...viewport}
               mapStyle="mapbox://styles/mapbox/dark-v10"
-              mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+              mapboxApiAccessToken="pk.eyJ1IjoicGFrdXQyIiwiYSI6ImNra3gxenFlcjAyYmgyb3AwbmdvYjg5cHoifQ.dEXAMvHoWip_DE7rJPoDhQ"
               onViewportChange={(nextViewport: Viewport) =>
                 setViewport(nextViewport)
               }
