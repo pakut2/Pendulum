@@ -18,8 +18,10 @@ import { getLocation } from "../api/ztm";
 import { postEnum } from "../store/enum/post.enum";
 import { ztmEnum } from "../store/enum/ztm.enum";
 
-// @ts-ignore eslint-disable-next-line import/no-webpack-loader-syntax
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax
 mapboxgl.workerClass =
+  // eslint-disable-next-line import/no-webpack-loader-syntax
   require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 interface MatchParams {
