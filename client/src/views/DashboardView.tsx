@@ -136,7 +136,6 @@ const DashboardView: React.FC = () => {
     success,
     successDelete,
     registerUser,
-    successLike,
     line,
     successResend,
     post,
