@@ -12,10 +12,15 @@ import MapGL, {
   Marker,
   Popup,
 } from "react-map-gl";
+import mapboxgl from "mapbox-gl";
 import { getPostDetails } from "../api/post";
 import { getLocation } from "../api/ztm";
 import { postEnum } from "../store/enum/post.enum";
 import { ztmEnum } from "../store/enum/ztm.enum";
+
+// @ts-ignore eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass =
+  require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
 
 interface MatchParams {
   id: string;
