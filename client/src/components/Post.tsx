@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, Image, ListGroup, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +33,8 @@ interface Props {
 }
 
 const Post: React.FC<Props> = ({ post }) => {
+  const [likesCount, setLikesCount] = useState(post.likes.length);
+
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state: RootState) => state.userLogin);
@@ -64,6 +66,14 @@ const Post: React.FC<Props> = ({ post }) => {
     try {
       await likePost(id);
       dispatch({ type: postEnum.POST_LIKE_SUCCESS });
+
+      if (post.likes.includes(post.author.id)) {
+        setLikesCount(likesCount - 1);
+        post.likes.splice(post.likes.indexOf(post.author.id), 1);
+      } else {
+        setLikesCount(likesCount + 1);
+        post.likes.push(post.author.id);
+      }
     } catch (err: any) {
       dispatch({
         type: postEnum.POST_LIKE_FAIL,
@@ -160,7 +170,7 @@ const Post: React.FC<Props> = ({ post }) => {
                   likeHandler(post.id);
                 }}
               >
-                <i className="fa fa-chevron-up"></i> {post.likes.length}
+                <i className="fa fa-chevron-up"></i> {likesCount}
               </Card.Text>
             ) : (
               <Link className="btn btn-secondary mx-3" to="/login">
