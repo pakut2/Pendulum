@@ -186,7 +186,7 @@ const DashboardView: React.FC = () => {
           </Fragment>
         )}
       </FormContainer>
-      {userInfo && <Chat id={userInfo.id} />}
+      {/* {userInfo && <Chat id={userInfo.id} />} */}
     </Fragment>
   );
 };
