@@ -60,7 +60,7 @@ const LoginView: React.FC = () => {
         type: authEnum.AUTH_LOGIN_SUCCESS,
         payload: data,
       });
-      // localStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (err: any) {
       dispatch({
         type: authEnum.AUTH_LOGIN_FAIL,
