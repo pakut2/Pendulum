@@ -34,6 +34,7 @@ interface Props {
 
 const Post: React.FC<Props> = ({ post }) => {
   const [likesCount, setLikesCount] = useState(post.likes.length);
+  const [liked, setLiked] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -42,6 +43,12 @@ const Post: React.FC<Props> = ({ post }) => {
   const formattedTime = DateTime.fromISO(post.createdAt);
   const diff = DateTime.now().diff(formattedTime, ["hours", "minutes"]);
   const minutes = Math.round(diff.minutes);
+
+  useEffect(() => {
+    if (userInfo && post.likes.includes(userInfo.id)) {
+      setLiked(true);
+    }
+  }, [liked, userInfo]);
 
   const deleteHandler = async (id: string) => {
     if (window.confirm("Are you sure?")) {
@@ -67,12 +74,14 @@ const Post: React.FC<Props> = ({ post }) => {
       await likePost(id);
       dispatch({ type: postEnum.POST_LIKE_SUCCESS });
 
-      if (post.likes.includes(post.author.id)) {
+      if (post.likes.includes(userInfo.id)) {
         setLikesCount(likesCount - 1);
-        post.likes.splice(post.likes.indexOf(post.author.id), 1);
+        post.likes.splice(post.likes.indexOf(userInfo.id), 1);
+        setLiked(false);
       } else {
         setLikesCount(likesCount + 1);
-        post.likes.push(post.author.id);
+        post.likes.push(userInfo.id);
+        setLiked(true);
       }
     } catch (err: any) {
       dispatch({
@@ -170,7 +179,11 @@ const Post: React.FC<Props> = ({ post }) => {
                   likeHandler(post.id);
                 }}
               >
-                <i className="fa fa-chevron-up"></i> {likesCount}
+                <i
+                  className="fa fa-chevron-up"
+                  style={liked ? { transform: "rotate(180deg)" } : {}}
+                ></i>{" "}
+                {likesCount}
               </Card.Text>
             ) : (
               <Link className="btn btn-secondary mx-3" to="/login">
