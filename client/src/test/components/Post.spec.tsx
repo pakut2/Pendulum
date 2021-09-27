@@ -9,7 +9,22 @@ import { Provider } from "react-redux";
 import { postEnum } from "../../store/enum/post.enum";
 
 const componentPropsMock = {
-  post: { author: { id: "1", avatar: { url: "" } }, likes: [] },
+  post: {
+    id: "1",
+    line: "",
+    direction: "",
+    closestStop: "",
+    author: {
+      id: "1",
+      email: "",
+      name: "",
+      role: "",
+      isEmailConfirmed: true,
+      avatar: { id: "1", url: "", key: "" },
+    },
+    likes: [],
+    createdAt: "",
+  },
 };
 
 const mockStore = configureMockStore([thunk]);

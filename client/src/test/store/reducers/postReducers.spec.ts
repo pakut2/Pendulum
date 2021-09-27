@@ -39,7 +39,7 @@ describe("postListReducer", () => {
         // @ts-ignore
         { payload: "error", type: postEnum.POST_LIST_FAIL }
       )
-    ).toEqual({ loading: false, error: "error" });
+    ).toEqual({ loading: false, error: "error", posts: [] });
   });
 });
 

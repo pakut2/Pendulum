@@ -6,7 +6,7 @@ describe("when getting signed URL", () => {
   it("should return url", async () => {
     jest
       .spyOn(axios, "post")
-      .mockReturnValue(Promise.resolve({ presignedURL: "", key: "" }));
+      .mockReturnValue(Promise.resolve({ presignedURL: "1", key: "1" }));
 
     const url = await getSignedUrl("filename");
 
