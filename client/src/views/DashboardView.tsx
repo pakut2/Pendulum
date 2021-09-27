@@ -15,7 +15,7 @@ import { ztmEnum } from "../store/enum/ztm.enum";
 import { io } from "socket.io-client";
 import { mailEnum } from "../store/enum/mail.enum";
 
-interface Post {
+interface PostTypes {
   id: string;
   line: string;
   direction: string;
@@ -61,7 +61,7 @@ const DashboardView: React.FC = () => {
     (state: RootState) => state.postDelete
   );
 
-  const { success: successLike, error: errorLike } = useSelector(
+  const { error: errorLike } = useSelector(
     (state: RootState) => state.postLike
   );
 
@@ -84,7 +84,7 @@ const DashboardView: React.FC = () => {
   const socket = io("/");
 
   useEffect(() => {
-    socket.on("post", (post: Post) => {
+    socket.on("post", (post: PostTypes) => {
       if (post && (!userInfo || post.author.id !== userInfo.id)) {
         postsFromSocket.push(post);
         dispatch({
@@ -170,14 +170,14 @@ const DashboardView: React.FC = () => {
           <Message>{error}</Message>
         ) : (
           <Fragment>
-            {posts.map((post: Post | any) => (
+            {posts.map((post: PostTypes | any) => (
               <Card key={post.id} className="my-3" border="secondary">
                 <Post post={post} />
               </Card>
             ))}
 
             {newPost &&
-              postsFromSocket.map((post: Post | any) => (
+              postsFromSocket.map((post: PostTypes | any) => (
                 <Card key={post.id} className="my-3" border="secondary">
                   <Post post={post} />
                 </Card>
